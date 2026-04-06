@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Command Record</title>
+  <style>
+    @page { size: A4; margin: 12mm 14mm; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      color: #2b2421;
+      background: #f5f2e9;
+      font-size: 10pt;
+      line-height: 1.35;
+    }
+    .page {
+      background: #f5f2e9;
+      padding: 4mm 0 0;
+    }
+    .kicker {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 6.5pt;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #5c4a42;
+      margin: 0 0 6px;
+    }
+    .title-row {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 8px;
+    }
+    .title-row td { vertical-align: top; }
+    .main-title {
+      font-size: 17pt;
+      font-weight: bold;
+      letter-spacing: -0.02em;
+      margin: 0;
+      line-height: 1.15;
+      color: #1a1412;
+    }
+    .seal {
+      text-align: right;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 6pt;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #3d2314;
+      border: 1px solid #c4a574;
+      padding: 8px 10px;
+      background: linear-gradient(180deg, #fef9ef 0%, #ede4d4 100%);
+      max-width: 140px;
+      margin-left: auto;
+    }
+    .seal svg { display: block; margin: 0 auto 4px; }
+    .meta-bar {
+      background: #2b2421;
+      color: #f5f2e9;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 7pt;
+      letter-spacing: 0.06em;
+      padding: 8px 12px;
+      margin: 10px 0 14px;
+    }
+    .meta-bar span { margin-right: 18px; }
+    .grid {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .grid td { vertical-align: top; padding: 0; }
+    .col-left { width: 64%; padding-right: 14px; }
+    .col-right { width: 36%; }
+    .section-h {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 7pt;
+      font-weight: bold;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #8b6914;
+      margin: 0 0 8px;
+    }
+    .star { color: #c4a574; margin-right: 4px; }
+    .box-light {
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(61,35,20,0.12);
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .label {
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 6.5pt;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #6b5a52;
+      margin: 10px 0 3px;
+    }
+    .label:first-child { margin-top: 0; }
+    .value-lg { font-size: 14pt; font-weight: bold; color: #1a1412; }
+    .value { font-size: 9.5pt; }
+    .garment {
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px dashed rgba(61,35,20,0.15);
+    }
+    .garment:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .g-row { width: 100%; border-collapse: collapse; }
+    .g-row td { vertical-align: top; }
+    .thumb {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      border: 1px solid #3d2314;
+      background: #e8e4dc;
+    }
+    .g-body { padding-left: 12px; }
+    .g-name { font-size: 12pt; font-weight: bold; margin: 0 0 4px; color: #1a1412; }
+    .g-desc { font-size: 8.5pt; color: #50443f; font-style: italic; margin: 0 0 8px; }
+    .pill {
+      display: inline-block;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 6.5pt;
+      font-weight: bold;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      margin-right: 6px;
+      border-radius: 2px;
+    }
+    .pill-dark { background: #1a1412; color: #f5f2e9; }
+    .pill-tan { background: #d4b896; color: #1a1412; border: 1px solid #8b6914; }
+    .specs { width: 100%; margin-top: 10px; border-collapse: collapse; }
+    .specs td {
+      width: 33%;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 6.5pt;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #6b5a52;
+      padding-top: 6px;
+      border-top: 1px solid #8b6914;
+      vertical-align: top;
+    }
+    .specs .sv { display: block; font-size: 8.5pt; color: #2b2421; text-transform: none; letter-spacing: 0; margin-top: 4px; font-weight: bold; }
+    .auth-box {
+      position: relative;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(61,35,20,0.15);
+      padding: 12px;
+      margin-bottom: 14px;
+      min-height: 120px;
+    }
+    .auth-watermark {
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.07;
+      font-size: 48pt;
+      color: #3d2314;
+      pointer-events: none;
+    }
+    .auth-copy {
+      font-size: 8.5pt;
+      font-style: italic;
+      line-height: 1.45;
+      color: #3d2314;
+      margin: 0 0 12px;
+      padding-right: 40px;
+    }
+    .sig { font-family: Georgia, serif; font-size: 11pt; font-style: italic; color: #1a1412; }
+    .sig-id { font-family: Consolas, monospace; font-size: 7pt; color: #6b5a52; margin-top: 4px; }
+    .fulfill-wrap { margin-top: 4px; }
+    .fulfill {
+      background: #3d2314;
+      color: #f5f2e9;
+      padding: 14px 16px;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+    .fulfill .row { font-size: 8pt; margin-bottom: 8px; width: 100%; }
+    .fulfill .row:last-child { margin-bottom: 0; }
+    .fulfill .k { opacity: 0.75; letter-spacing: 0.12em; text-transform: uppercase; font-size: 6.5pt; }
+    .fulfill .amt { font-weight: bold; text-align: right; }
+    .fulfill .money-row { width: 100%; border-collapse: collapse; }
+    .fulfill .money-row td { padding: 0 0 6px; vertical-align: top; }
+    .fulfill .pay { font-size: 9pt; font-weight: bold; margin-bottom: 10px; }
+    .fulfill hr {
+      border: none;
+      border-top: 2px solid rgba(245,242,233,0.35);
+      margin: 12px 0;
+    }
+    .total-label {
+      font-size: 6.5pt;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      opacity: 0.8;
+      margin-bottom: 4px;
+    }
+    .total-val { font-family: Georgia, serif; font-size: 22pt; font-weight: bold; letter-spacing: -0.02em; }
+    .footer {
+      margin-top: 18px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(43,36,33,0.15);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 6.5pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #6b5a52;
+      width: 100%;
+    }
+    .footer td { width: 50%; }
+    .footer .r { text-align: right; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <p class="kicker">{{KICKER}}</p>
+  <table class="title-row" role="presentation">
+    <tr>
+      <td>
+        <h1 class="main-title">{{COMMAND_TITLE}}</h1>
+      </td>
+      <td style="width:150px">
+        <div class="seal">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#8b6914" stroke-width="1.2">
+            <path d="M12 3l8 4v5c0 5-3.5 9.5-8 11-4.5-1.5-8-6-8-11V7l8-4z"/>
+            <path d="M9 12l2 2 4-4" stroke-linecap="round"/>
+          </svg>
+          Certified authentic<br/>Monument Co. Archive
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <div class="meta-bar">
+    <span>SN: {{SERIAL}}</span>
+    <span>TIMESTAMP: {{TIMESTAMP}}</span>
+  </div>
+
+  <table class="grid" role="presentation">
+    <tr>
+      <td class="col-left">
+        <p class="section-h"><span class="star">★</span> COMMANDER INFO</p>
+        <div class="box-light">
+          <div class="label">Registry name</div>
+          <div class="value-lg">{{REGISTRY_NAME}}</div>
+          <div class="label">Registry email</div>
+          <div class="value">{{REGISTRY_EMAIL}}</div>
+          <div class="label">Primary phone</div>
+          <div class="value">{{PRIMARY_COMMS}}</div>
+          <div class="label">Secondary phone</div>
+          <div class="value">{{SECONDARY_COMMS}}</div>
+        </div>
+
+        <p class="section-h"><span class="star">★</span> GARMENT SPECIFICATIONS</p>
+        <div class="box-light">
+          {{ITEMS_BLOCK}}
+        </div>
+      </td>
+      <td class="col-right">
+        <p class="section-h"><span class="star">★</span> AUTHENTICATION</p>
+        <div class="auth-box">
+          <div class="auth-watermark">✦</div>
+          <p class="auth-copy">{{AUTH_COPY}}</p>
+          <div class="sig">{{SIGNATURE_LINE}}</div>
+          <div class="sig-id">{{SIGNATURE_ID}}</div>
+        </div>
+
+        <p class="section-h"><span class="star">★</span> FULFILLMENT</p>
+        <div class="fulfill-wrap">
+          <div class="fulfill">
+            <div class="pay">
+              <span class="k">Payment method</span><br/>
+              {{PAYMENT_METHOD}}
+            </div>
+            <table class="money-row" role="presentation">
+              <tr>
+                <td class="k">Base item cost</td>
+                <td class="amt">{{BASE_COST}}</td>
+              </tr>
+              <tr>
+                <td class="k">Archival processing</td>
+                <td class="amt">{{ARCHIVAL_FEE}}</td>
+              </tr>
+            </table>
+            <hr/>
+            <div class="total-label">Total command value</div>
+            <div class="total-val">{{TOTAL_VALUE}}</div>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+
+  <table class="footer" role="presentation">
+    <tr>
+      <td>{{FOOTER_LEFT}}</td>
+      <td class="r">{{FOOTER_RIGHT}}</td>
+    </tr>
+  </table>
+</div>
+</body>
+</html>

@@ -1,0 +1,16 @@
+# Copy to application-local.properties and fill in (that file is gitignored). Do not commit secrets.
+
+# Option C — Docker Postgres from repo root (docker compose up -d). Host port 5433 → container 5432.
+# spring.datasource.url=jdbc:postgresql://127.0.0.1:5433/vintage337
+# spring.datasource.username=postgres
+# spring.datasource.password=postgres
+
+# Option A — Session pooler (IPv4; works on Windows). Replace REGION with your region (e.g. eu-central-1).
+spring.datasource.url=jdbc:postgresql://aws-0-REGION.pooler.supabase.com:5432/postgres?sslmode=require
+spring.datasource.username=postgres.YOUR_PROJECT_REF
+spring.datasource.password=
+
+# Option B — Direct (IPv6-only DNS; may fail on some networks)
+# spring.datasource.url=jdbc:postgresql://db.YOUR_PROJECT_REF.supabase.co:5432/postgres?sslmode=require
+# spring.datasource.username=postgres
+# spring.datasource.password=

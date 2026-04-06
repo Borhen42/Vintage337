@@ -1,0 +1,240 @@
+<div class="cart-root heritage-landing">
+  <app-editorial-navbar />
+
+  <main class="cart-main film-grain">
+    @if (orderAck()) {
+      <section class="cart-ack" aria-live="polite">
+        <h1 class="cart-ack__title">Heritage request logged</h1>
+        @if (lastOrderNumber()) {
+          <p class="cart-ack__ref">Folio reference: <strong>{{ lastOrderNumber() }}</strong></p>
+        }
+        <p class="cart-ack__copy">
+          Your folio was sealed for fulfilment. You will receive archive confirmation by SMS once the craftsman desk
+          reviews routing.
+        </p>
+        <a routerLink="/catalogue" class="cart-ack__btn ticket-stub">Continue catalogue</a>
+      </section>
+    } @else if (!cart.lines().length) {
+      <section class="cart-empty" aria-labelledby="cart-empty-heading">
+        <h1 id="cart-empty-heading" class="cart-empty__title">Your archive is open</h1>
+        <p class="cart-empty__copy">No pieces are held in folio yet. Sign in and add from the catalogue to build your shipment.</p>
+        <a routerLink="/catalogue" class="cart-empty__btn ticket-stub">Browse catalogue</a>
+      </section>
+    } @else {
+      <div class="cart-layout">
+        <div class="cart-checkout">
+          <header class="cart-page-head">
+            <p class="cart-page-head__kicker">Checkout</p>
+            <h1 class="cart-page-head__title">Seal your shipment</h1>
+          </header>
+
+          <section class="cart-step" aria-labelledby="step-fulfillment">
+            <h2 id="step-fulfillment" class="cart-step__label">Step 01 — Fulfillment selection</h2>
+            <div class="cart-fulfill" role="group" aria-label="Shipping or pickup">
+              <button
+                type="button"
+                class="cart-fulfill__card"
+                [class.cart-fulfill__card--active]="fulfillment() === 'standard'"
+                (click)="setFulfillment('standard')"
+              >
+                <span class="cart-fulfill__icon" aria-hidden="true">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35">
+                    <path d="M3 7h11v10H3z" stroke-linejoin="round" />
+                    <path d="M14 10h3l3 3v4h-6" stroke-linejoin="round" />
+                    <circle cx="7.5" cy="18" r="1.5" />
+                    <circle cx="17.5" cy="18" r="1.5" />
+                  </svg>
+                </span>
+                <span class="cart-fulfill__name">Payment on delivery</span>
+                <span class="cart-fulfill__price">{{ formatPrice(12) }}</span>
+                <span class="cart-fulfill__hint">Arrives in 3–5 heritage days.</span>
+              </button>
+
+              <button
+                type="button"
+                class="cart-fulfill__card"
+                [class.cart-fulfill__card--active]="fulfillment() === 'pickup'"
+                (click)="setFulfillment('pickup')"
+              >
+                <span class="cart-fulfill__icon" aria-hidden="true">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35">
+                    <path d="M4 10l8-6 8 6v10a2 2 0 01-2 2H6a2 2 0 01-2-2V10z" stroke-linejoin="round" />
+                    <path d="M9 22V12h6v10" stroke-linejoin="round" />
+                  </svg>
+                </span>
+                <span class="cart-fulfill__name">In-store pickup</span>
+                <span class="cart-fulfill__price">FREE</span>
+                <span class="cart-fulfill__hint">Main Archive, Sector 337.</span>
+              </button>
+
+              <button
+                type="button"
+                class="cart-fulfill__card"
+                [class.cart-fulfill__card--active]="fulfillment() === 'cod'"
+                (click)="setFulfillment('cod')"
+              >
+                <span class="cart-fulfill__icon" aria-hidden="true">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35">
+                    <rect x="3" y="6" width="18" height="12" rx="2" stroke-linejoin="round" />
+                    <path d="M3 10h18" />
+                    <path d="M7 15h4" stroke-linecap="round" />
+                  </svg>
+                </span>
+                <span class="cart-fulfill__name">Payment in post</span>
+                <span class="cart-fulfill__price">+{{ formatPrice(5) }}</span>
+                <span class="cart-fulfill__hint">Available for long distance district.</span>
+              </button>
+            </div>
+          </section>
+
+          <section class="cart-step cart-step--payment" aria-labelledby="step-payment">
+            <h2 id="step-payment" class="cart-step__label">Step 02 — Payment archive</h2>
+            <div class="cart-pay-card">
+              <div class="cart-pay-card__radio" aria-hidden="true"></div>
+              <div>
+                <p class="cart-pay-card__title">{{ paymentHeadline() }}</p>
+                <p class="cart-pay-card__sub">{{ paymentSub() }}</p>
+              </div>
+            </div>
+
+            <div class="cart-form-wrap">
+              <div class="cart-form-watermark watermark-text" aria-hidden="true">Strictly authentic</div>
+              <div class="cart-form">
+                <label class="cart-field">
+                  <span class="cart-field__label">Full name</span>
+                  <input
+                    class="cart-field__input"
+                    name="archivistName"
+                    type="text"
+                    autocomplete="name"
+                    placeholder="Archivist name"
+                    [(ngModel)]="fullName"
+                  />
+                  @if (attempted() && fullName.trim().length < 2) {
+                    <span class="cart-field__err">Enter the name on file.</span>
+                  }
+                </label>
+                <label class="cart-field">
+                  <span class="cart-field__label">Phone number</span>
+                  <input
+                    class="cart-field__input"
+                    name="phone"
+                    type="tel"
+                    autocomplete="tel"
+                    placeholder="+216 …"
+                    [(ngModel)]="phone"
+                  />
+                  @if (attempted() && phone.trim().length < 6) {
+                    <span class="cart-field__err">A reachable line is required.</span>
+                  }
+                </label>
+                <label class="cart-field">
+                  <span class="cart-field__label">Alternative phone</span>
+                  <input
+                    class="cart-field__input"
+                    name="altPhone"
+                    type="tel"
+                    autocomplete="tel"
+                    placeholder="Optional"
+                    [(ngModel)]="altPhone"
+                  />
+                </label>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <aside class="cart-summary" aria-labelledby="summary-heading">
+          <div class="cart-summary__head">
+            <h2 id="summary-heading" class="cart-summary__title">Your archive</h2>
+            <span class="cart-summary__badge">{{ itemBadge() }}</span>
+          </div>
+
+          <ul class="cart-lines">
+            @for (line of cart.lines(); track line.key) {
+              <li class="cart-line">
+                <div class="cart-line__img-shell vintage-overlay film-grain">
+                  @if (line.imageUrl) {
+                    <img class="cart-line__img" [src]="line.imageUrl | uploadSrc" [alt]="line.name" width="120" height="120" />
+                  } @else {
+                    <div class="cart-line__ph">No image</div>
+                  }
+                </div>
+                <div class="cart-line__body">
+                  <p class="cart-line__name">{{ line.name }}</p>
+                  <div class="cart-line__tags">
+                    <span class="cart-tag cart-tag--size">Size: {{ line.size }}</span>
+                    <span class="cart-tag cart-tag--color">Color: {{ line.color }}</span>
+                  </div>
+                  <div class="cart-line__price-row">
+                    <span class="cart-line__price">{{ formatPrice(line.price) }}</span>
+                    <span class="cart-line__compare">{{ lineCompareAt(line) }}</span>
+                  </div>
+                  <div class="cart-line__qty">
+                    <button type="button" class="cart-qty__btn" (click)="cart.adjustQuantity(line.key, -1)" aria-label="Decrease quantity">−</button>
+                    <span class="cart-qty__val">{{ line.quantity }}</span>
+                    <button type="button" class="cart-qty__btn" (click)="cart.adjustQuantity(line.key, 1)" aria-label="Increase quantity">+</button>
+                    <button type="button" class="cart-line__remove" (click)="cart.removeLine(line.key)">Remove</button>
+                  </div>
+                </div>
+              </li>
+            }
+          </ul>
+
+          <div class="cart-totals">
+            <div class="cart-totals__row">
+              <span>Archive subtotal</span>
+              <span>{{ formatPrice(cart.subtotal()) }}</span>
+            </div>
+            <div class="cart-totals__row">
+              <span>Craftsman logistics</span>
+              <span>{{ logisticsLabel() }}</span>
+            </div>
+            <div class="cart-totals__row">
+              <span>Heritage tax (est.)</span>
+              <span>{{ formatPrice(taxEstimate()) }}</span>
+            </div>
+            <div class="cart-totals__invest">
+              <span class="cart-totals__invest-label">Total investment</span>
+              <span class="cart-totals__invest-val">{{ formatPrice(total()) }}</span>
+            </div>
+          </div>
+
+          @if (submitError()) {
+            <p class="cart-submit-err" role="alert">{{ submitError() }}</p>
+          }
+          <button
+            type="button"
+            class="cart-cta ticket-stub"
+            [disabled]="submitting()"
+            (click)="secureHeritage()"
+          >
+            @if (submitting()) {
+              <span>Sealing folio…</span>
+            } @else {
+              <span>Secure your heritage</span>
+              <span class="cart-cta__arrow" aria-hidden="true">→</span>
+            }
+          </button>
+
+          <p class="cart-legal">
+            By sealing this folio you agree to archive dispatch terms. Unworn returns within fourteen solar days where
+            policy allows.
+          </p>
+        </aside>
+      </div>
+    }
+  </main>
+
+  <footer class="archive-foot">
+    <div class="archive-foot__inner">
+      <p class="archive-foot__copy">© 1999 Heritage Archive. All rights reserved.</p>
+      <nav class="archive-foot__nav" aria-label="Legal">
+        <a routerLink="/" fragment="contact">Shipping policy</a>
+        <a routerLink="/" fragment="contact">Returns</a>
+        <a routerLink="/" fragment="store-locator">Store locator</a>
+        <a routerLink="/" fragment="contact">Contact craftsman</a>
+      </nav>
+    </div>
+  </footer>
+</div>

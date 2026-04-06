@@ -1,0 +1,265 @@
+<div class="pd-root heritage-landing">
+  <app-editorial-navbar />
+
+  @if (loading()) {
+    <main class="pd-main film-grain">
+      <p class="pd-state">Opening archive folio…</p>
+    </main>
+  } @else if (notFound() || !product()) {
+    <main class="pd-main film-grain">
+      <div class="pd-missing">
+        <h1 class="pd-missing__title">Piece not in the vault</h1>
+        <p class="pd-missing__copy">This catalogue number may have been decommissioned or never published.</p>
+        <a routerLink="/catalogue" class="pd-missing__btn">Return to catalogue</a>
+      </div>
+    </main>
+  } @else {
+    @let p = product()!;
+
+    <main class="pd-main film-grain">
+      <nav class="pd-breadcrumb" aria-label="Breadcrumb">
+        @for (piece of breadcrumbPieces(); track $index; let last = $last) {
+          <span class="pd-breadcrumb__item">{{ piece }}</span>
+          @if (!last) {
+            <span class="pd-breadcrumb__sep" aria-hidden="true">*</span>
+          }
+        }
+      </nav>
+
+      <div class="pd-hero">
+        <div class="pd-gallery">
+          <div class="pd-gallery__stage">
+            <span class="pd-est" aria-hidden="true">Est. {{ yearEst(p.createdAt) }}</span>
+            <div class="pd-gallery__img-shell vintage-overlay film-grain">
+              @if (mainImageUrl()) {
+                <img
+                  class="pd-gallery__img"
+                  [src]="mainImageUrl()"
+                  [alt]="p.name"
+                  width="900"
+                  height="900"
+                  fetchpriority="high"
+                  loading="eager"
+                  decoding="async"
+                />
+              } @else {
+                <div class="pd-gallery__placeholder">No image on file</div>
+              }
+            </div>
+          </div>
+
+          @if (gallery().length > 1) {
+            <div class="pd-thumbs" role="tablist" aria-label="Gallery thumbnails">
+              @for (slot of thumbSlots(); track slot.index) {
+                <button
+                  type="button"
+                  class="pd-thumb"
+                  [class.pd-thumb--active]="selectedImageIndex() === slot.index"
+                  (click)="selectImage(slot.index)"
+                >
+                  <img [src]="slot.src" alt="" width="120" height="120" />
+                  @if (slot.more > 0) {
+                    <span class="pd-thumb__more">+{{ slot.more }}</span>
+                  }
+                </button>
+              }
+            </div>
+          }
+        </div>
+
+        <div class="pd-buy">
+          <h1 class="pd-title">{{ p.name }}</h1>
+
+          <div class="pd-price-row">
+            <div class="pd-price">
+              <span class="pd-price__current">{{ formatPrice(p.price) }}</span>
+              <span class="pd-price__compare">Ref. {{ compareAtPrice(p) }}</span>
+            </div>
+            @if (limitedBadge()) {
+              <span class="pd-badge">Limited archive release</span>
+            }
+          </div>
+
+          <div class="pd-stars" aria-label="Heritage rating">
+            @for (s of [1, 2, 3]; track s) {
+              <span class="pd-star" aria-hidden="true">★</span>
+            }
+          </div>
+
+          <div class="pd-desc">
+            @for (para of descriptionParagraphs(); track $index) {
+              <p [class.pd-desc__lead]="$first">{{ para }}</p>
+            }
+          </div>
+
+          @if (uniqueColors().length) {
+            <div class="pd-field">
+              <div class="pd-field__head">
+                <span class="pd-label">Select size</span>
+                <span class="pd-field__hint">Size guide</span>
+              </div>
+              <div class="pd-sizes" role="group" aria-label="Sizes">
+                @for (sz of sizesForColor(); track sz) {
+                  <button
+                    type="button"
+                    class="pd-size ticket-stub"
+                    [class.pd-size--active]="selectedSize() === sz"
+                    (click)="selectSize(sz)"
+                  >
+                    {{ sz }}
+                  </button>
+                }
+              </div>
+            </div>
+
+            <div class="pd-field">
+              <span class="pd-label">Archive colorway</span>
+              <div class="pd-swatches" role="group" aria-label="Colors">
+                @for (c of uniqueColors(); track c) {
+                  <button
+                    type="button"
+                    class="pd-swatch"
+                    [class.pd-swatch--active]="selectedColor() === c"
+                    [attr.aria-label]="c"
+                    (click)="selectColor(c)"
+                  >
+                    <span class="pd-swatch__dot" [attr.data-tone]="swatchTone(c)"></span>
+                    @if (selectedColor() === c) {
+                      <span class="pd-swatch__check" aria-hidden="true">✓</span>
+                    }
+                  </button>
+                }
+              </div>
+            </div>
+          } @else {
+            <p class="pd-single-variant">Single archive configuration. Stock: {{ p.stock }}.</p>
+          }
+
+          <button
+            type="button"
+            class="pd-cta ticket-stub"
+            [disabled]="stockForSelection() <= 0"
+            (click)="addToArchive()"
+          >
+            <span class="pd-cta__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 7h5l2 3h11v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke-linejoin="round" />
+                <path d="M8 21V11h8v10" stroke-linejoin="round" />
+              </svg>
+            </span>
+            @if (addAck()) {
+              <span>Held in folio</span>
+            } @else if (stockForSelection() <= 0) {
+              <span>Out of stock</span>
+            } @else {
+              <span>Add to archive</span>
+            }
+          </button>
+
+          <div class="pd-trust">
+            <span class="pd-trust__icon" aria-hidden="true">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35">
+                <path d="M12 3l8 4v5c0 5-3.5 9.5-8 11-4.5-1.5-8-6-8-11V7l8-4z" stroke-linejoin="round" />
+                <path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+            <div>
+              <p class="pd-trust__title">Authenticity guarantee</p>
+              <p class="pd-trust__copy">
+                Every piece in the 337 vault is condition-checked and catalogued before it appears on the floor.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section class="pd-specs" aria-labelledby="pd-specs-heading">
+        <span id="pd-specs-heading" class="visually-hidden">Technical specifications</span>
+        <div class="pd-specs__watermark watermark-text" aria-hidden="true">337</div>
+        <div class="pd-specs__grid">
+          <div class="pd-spec-col">
+            <div class="pd-spec-col__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35">
+                <path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <h2 class="pd-spec-col__title">Construction</h2>
+            <dl class="pd-spec-list">
+              <div>
+                <dt>Weight</dt>
+                <dd>Heavy-duty yard goods, built for daily rotation.</dd>
+              </div>
+              <div>
+                <dt>Thread</dt>
+                <dd>Core-spun polyester; lock-stitched stress points.</dd>
+              </div>
+              <div>
+                <dt>Hardware</dt>
+                <dd>Oxidized brass and archive-grade findings.</dd>
+              </div>
+              <div>
+                <dt>Finish</dt>
+                <dd>Garment washed for a lived-in hand.</dd>
+              </div>
+            </dl>
+          </div>
+          <div class="pd-spec-col">
+            <div class="pd-spec-col__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v6l4 2" stroke-linecap="round" />
+              </svg>
+            </div>
+            <h2 class="pd-spec-col__title">Provenance</h2>
+            <p class="pd-spec-col__prose">
+              The 337 pattern language dates to the late nineties utilitarian wave—when silhouettes were honest, labels
+              were quiet, and fabric did the talking. This piece carries that lineage forward as a documented archive
+              object, not a trend cycle.
+            </p>
+          </div>
+          <div class="pd-spec-col">
+            <div class="pd-spec-col__icon" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.35">
+                <path d="M3 18h12v-6H3v6zM3 6h18v6H3V6z" stroke-linejoin="round" />
+                <path d="M21 12h-3M6 12H3" stroke-linecap="round" />
+              </svg>
+            </div>
+            <h2 class="pd-spec-col__title">Archive logistics</h2>
+            <p class="pd-spec-col__prose">
+              Orders leave the Tunis atelier within two business days, wrapped in kraft and wax-thread tie. Returns
+              accepted on unworn archive stock within fourteen days—see boutique desk for RA details.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <p class="pd-back">
+        <button type="button" class="pd-back__link" (click)="goBack()">← Back to catalogue</button>
+      </p>
+    </main>
+  }
+
+  <footer class="archive-foot">
+    <div class="archive-foot__inner">
+      <p class="archive-foot__copy">© 1999 Heritage Archive. All rights reserved.</p>
+      <nav class="archive-foot__nav" aria-label="Legal">
+        <a href="#">Shipping &amp; returns</a>
+        <a href="#">Privacy policy</a>
+        <a href="#">Terms of service</a>
+        <a routerLink="/" fragment="contact">Contact</a>
+      </nav>
+      <div class="archive-foot__icons" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" opacity="0.7">
+          <path
+            d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z"
+          />
+        </svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" opacity="0.7">
+          <path
+            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"
+          />
+        </svg>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,66 @@
+/**
+ * Shared heritage shell for admin routes (Add product, Orders, etc.).
+ * Imported from global styles so every page using .admin-form-page matches the archive admin look.
+ */
+.admin-form-page {
+  max-width: 44rem;
+  padding: 2rem 1.5rem 3rem;
+  margin: 0 auto;
+  background: var(--surface-container-low);
+  border: 1px solid rgba(212, 195, 188, 0.35);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 12px 40px rgba(60, 40, 30, 0.06);
+}
+
+.admin-form-page--wide {
+  max-width: 72rem;
+}
+
+.admin-form-page__head {
+  margin-bottom: 1.75rem;
+}
+
+.admin-form-page__kicker {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-body);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+}
+
+.admin-form-page__title {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-headline);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary-container);
+}
+
+.admin-form-page__lead {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--on-surface-variant);
+}
+
+.admin-form-page__lead strong {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.admin-form-page__back {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: var(--secondary-container);
+  }
+}

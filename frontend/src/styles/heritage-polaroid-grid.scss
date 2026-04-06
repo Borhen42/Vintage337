@@ -1,0 +1,308 @@
+/* Polaroid product grid — shared Archive / Catalogue / Collection */
+
+.archive-empty {
+  max-width: 40rem;
+  margin: 0 auto 2rem;
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--on-surface-variant);
+  background: color-mix(in srgb, var(--surface-container-low) 90%, transparent);
+  border-radius: var(--radius-lg);
+
+  code {
+    font-size: 0.8em;
+  }
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: clamp(2rem, 4vw, 3.5rem) clamp(1.25rem, 3vw, 2rem);
+  align-items: start;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2.5rem 1.75rem;
+  }
+
+  @media (min-width: 1100px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.archive-polaroid {
+  position: relative;
+  padding: 1rem 1rem 2.75rem;
+  background: var(--surface-container-lowest);
+  border-radius: 2px;
+  box-shadow:
+    0 10px 30px rgba(29, 28, 22, 0.1),
+    0 1px 3px rgba(29, 28, 22, 0.05);
+  transition:
+    transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+    box-shadow 0.35s ease;
+
+  &:hover {
+    transform: scale(1.04) rotate(0deg) translateY(-8px) !important;
+    box-shadow: 0 20px 40px rgba(29, 28, 22, 0.14);
+    z-index: 4;
+  }
+}
+
+.archive-polaroid__link-card {
+  display: block;
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 3px;
+    border-radius: 2px;
+    z-index: 5;
+  }
+}
+
+.archive-polaroid__tape {
+  position: absolute;
+  width: 56px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(3px);
+  border-radius: 1px;
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+.archive-polaroid__frame {
+  position: relative;
+}
+
+.archive-polaroid__img-wrap {
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background: var(--surface-container-high);
+}
+
+.archive-polaroid__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.archive-polaroid__img--tone-a {
+  filter: grayscale(30%) contrast(110%) sepia(12%);
+}
+.archive-polaroid__img--tone-b {
+  filter: grayscale(18%) contrast(105%);
+}
+.archive-polaroid__img--tone-c {
+  filter: brightness(0.92) contrast(1.08);
+}
+.archive-polaroid__img--tone-d {
+  filter: grayscale(8%) contrast(118%);
+}
+.archive-polaroid__img--tone-e {
+  filter: sepia(18%) contrast(104%);
+}
+.archive-polaroid__img--tone-f {
+  filter: contrast(108%) brightness(1.04);
+}
+.archive-polaroid__img--tone-g {
+  filter: grayscale(100%) contrast(128%);
+}
+
+.archive-polaroid__wash {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  opacity: 0.35;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.archive-polaroid__fab {
+  position: absolute;
+  bottom: 0.65rem;
+  right: 0.65rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #ba1a1a, #93000a);
+  color: #fff;
+  font-size: 1.35rem;
+  font-weight: 300;
+  line-height: 2rem;
+  text-align: center;
+  box-shadow:
+    inset 1px 1px 2px rgba(255, 255, 255, 0.25),
+    2px 4px 10px rgba(0, 0, 0, 0.25);
+  pointer-events: none;
+}
+
+.archive-polaroid__caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 0.5rem;
+  padding: 0 0.15rem;
+}
+
+.archive-polaroid__name {
+  margin: 0;
+  font-family: var(--font-headline);
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--primary);
+}
+
+.archive-polaroid__meta {
+  margin: 0.35rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.58;
+  color: var(--on-surface);
+}
+
+.archive-polaroid__price {
+  margin: 0.25rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--secondary);
+}
+
+.archive-polaroid__seal {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #ba1a1a, #93000a);
+  color: #fff;
+  box-shadow:
+    inset 1px 1px 3px rgba(255, 255, 255, 0.28),
+    2px 4px 10px rgba(0, 0, 0, 0.28);
+}
+
+.archive-polaroid--a {
+  transform: rotate(-3deg);
+  .archive-polaroid__tape {
+    top: -0.65rem;
+    left: -0.35rem;
+    transform: rotate(-14deg);
+  }
+}
+.archive-polaroid--b {
+  transform: rotate(2deg);
+  @media (min-width: 768px) {
+    margin-top: 2.5rem;
+  }
+  .archive-polaroid__tape {
+    top: -0.45rem;
+    right: -0.55rem;
+    transform: rotate(10deg);
+  }
+}
+.archive-polaroid--c {
+  transform: rotate(-1deg);
+  .archive-polaroid__tape {
+    bottom: -0.55rem;
+    left: -0.85rem;
+    transform: rotate(102deg);
+  }
+}
+.archive-polaroid--d {
+  transform: rotate(4deg);
+  @media (min-width: 768px) {
+    margin-top: 1.75rem;
+  }
+  .archive-polaroid__tape {
+    top: -0.65rem;
+    left: 50%;
+    transform: translateX(-50%) rotate(3deg);
+    opacity: 0.35;
+  }
+}
+.archive-polaroid--e {
+  transform: rotate(-5deg);
+  @media (min-width: 1100px) {
+    margin-left: 1.5rem;
+  }
+  .archive-polaroid__tape {
+    top: 2.25rem;
+    right: -1rem;
+    transform: rotate(-82deg);
+  }
+}
+.archive-polaroid--f {
+  transform: rotate(3deg);
+  @media (min-width: 1100px) {
+    margin-top: -3.5rem;
+  }
+}
+.archive-polaroid--g {
+  transform: rotate(-2deg);
+  @media (min-width: 1100px) {
+    margin-top: 0.75rem;
+  }
+  .archive-polaroid__tape {
+    bottom: -0.25rem;
+    left: 2rem;
+    transform: rotate(-12deg);
+    opacity: 0.42;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-polaroid {
+    transform: none !important;
+    transition: none;
+    &:hover {
+      transform: none !important;
+    }
+  }
+}
+
+.archive-placeholder-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 12rem;
+  padding: 2rem;
+  border: 2px dashed var(--outline-variant);
+  border-radius: var(--radius-lg);
+  opacity: 0.72;
+  transform: rotate(8deg);
+  pointer-events: none;
+
+  @media (min-width: 768px) {
+    grid-column: span 2;
+    min-height: 14rem;
+  }
+
+  @media (min-width: 1100px) {
+    grid-column: span 1;
+  }
+}
+
+.archive-placeholder-tile__text {
+  font-family: var(--font-headline);
+  font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+  font-style: italic;
+  text-align: center;
+  color: var(--on-surface-variant);
+}

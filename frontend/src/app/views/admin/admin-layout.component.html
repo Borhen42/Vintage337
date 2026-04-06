@@ -1,0 +1,105 @@
+<div class="admin-root">
+  <aside class="admin-sidenav film-grain" aria-label="Admin navigation">
+    <div class="admin-sidenav__brand">
+      <h1 class="admin-sidenav__title">Vintage 337</h1>
+      <p class="admin-sidenav__tag">Heritage archive admin</p>
+    </div>
+    <nav class="admin-sidenav__nav">
+      <a
+        routerLink="/admin/dashboard"
+        routerLinkActive="admin-sidenav__link--active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="admin-sidenav__link"
+      >
+        <span class="admin-sidenav__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+        </span>
+        Overview
+      </a>
+      <a routerLink="/admin/products/new" routerLinkActive="admin-sidenav__link--active" class="admin-sidenav__link">
+        <span class="admin-sidenav__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1 1 0-1.99 0-2h16v2zm0 7H4V6h16v3zm2 9v-7l-8 4v-4l-8 4V7h18v11z"/></svg>
+        </span>
+        Add product
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="admin-sidenav__link--active" class="admin-sidenav__link">
+        <span class="admin-sidenav__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0020 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+        </span>
+        Orders
+      </a>
+      <a routerLink="/admin/customers" routerLinkActive="admin-sidenav__link--active" class="admin-sidenav__link">
+        <span class="admin-sidenav__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.5V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+        </span>
+        Customers
+      </a>
+      <a routerLink="/admin/reclamations" routerLinkActive="admin-sidenav__link--active" class="admin-sidenav__link">
+        <span class="admin-sidenav__icon" aria-hidden="true">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
+        </span>
+        Réclamations
+      </a>
+    </nav>
+    <div class="admin-sidenav__footer">
+      <a routerLink="/" class="admin-sidenav__store-btn">View storefront</a>
+      <button type="button" class="admin-sidenav__signout" (click)="signOut()">
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+  <div class="admin-shell">
+    <header class="admin-topbar">
+      <form class="admin-topbar__search" (ngSubmit)="submitSearch()">
+        <svg class="admin-topbar__search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" /><path d="M20 20l-4-4" />
+        </svg>
+        <input
+          type="search"
+          name="q"
+          class="admin-topbar__input"
+          placeholder="Search catalogue..."
+          aria-label="Search catalogue"
+          [(ngModel)]="searchQuery"
+        />
+      </form>
+      <div class="admin-topbar__actions">
+        <button
+          type="button"
+          class="admin-topbar__icon-btn admin-topbar__icon-btn--bell"
+          aria-label="Pending orders"
+          (click)="goToOrders()"
+        >
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+          @if (pendingCount() > 0) {
+            <span class="admin-topbar__badge">{{ pendingCount() > 99 ? '99+' : pendingCount() }}</span>
+          }
+        </button>
+        <button type="button" class="admin-topbar__icon-btn" aria-label="Settings">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.52-.4-1.08-.73-1.69-.98l-.36-2.54a.484.484 0 00-.48-.43h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.61.25-1.17.59-1.69.98l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.52.4 1.08.73 1.69.98l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.61-.25 1.17-.59 1.69-.98l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+        </button>
+        <div class="admin-topbar__user">
+          <span class="admin-topbar__avatar" aria-hidden="true">{{ displayName().charAt(0) }}</span>
+          <span class="admin-topbar__name">{{ displayName() }}</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="admin-content">
+      @if (pendingCount() > 0 && !bannerDismissed()) {
+        <div class="admin-pending-banner" role="status">
+          <p>
+            <strong>{{ pendingCount() }}</strong>
+            order(s) awaiting acceptance.
+          </p>
+          <div class="admin-pending-banner__actions">
+            <button type="button" class="admin-pending-banner__primary" (click)="goToOrders()">View orders</button>
+            <button type="button" class="admin-pending-banner__dismiss" (click)="dismissPendingBanner()">Dismiss</button>
+          </div>
+        </div>
+      }
+      <router-outlet />
+    </main>
+  </div>
+</div>

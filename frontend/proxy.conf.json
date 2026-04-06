@@ -1,0 +1,10 @@
+[
+  {
+    "context": ["/api", "/uploads"],
+    "target": "http://127.0.0.1:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "timeout": 120000,
+    "logLevel": "warn"
+  }
+]

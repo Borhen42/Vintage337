@@ -1,0 +1,49 @@
+# API + Postgres for a VPS or single host. Frontend: deploy separately (e.g. Vercel) or put a reverse proxy in front.
+#
+# Usage:
+#   cp env.prod.example .env   # optional; POSTGRES_PASSWORD defaults to postgres like local dev
+#   docker compose -f docker-compose.prod.yml --env-file .env up -d --build
+#
+# Then set your frontend production build `apiBaseUrl` to https://YOUR_HOST:8080 (or your public URL).
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: vintage337-postgres-prod
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: vintage337
+    volumes:
+      - vintage337_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vintage337-api
+    ports:
+      - "${API_PORT:-8080}:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/vintage337
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      JWT_SECRET: ${JWT_SECRET:-Vintage337ChangeThisSecretKeyTo32charsMin!!}
+      APP_CORS_ALLOWED_ORIGINS: ${APP_CORS_ALLOWED_ORIGINS:-http://localhost:4200,http://127.0.0.1:4200}
+      APP_FRONTEND_URL: ${APP_FRONTEND_URL:-http://localhost:4200}
+      APP_PUBLIC_URL: ${APP_PUBLIC_URL:-http://localhost:8080}
+      APP_UPLOAD_DIR: /data/uploads
+    volumes:
+      - vintage337_uploads:/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  vintage337_pgdata:
+  vintage337_uploads:

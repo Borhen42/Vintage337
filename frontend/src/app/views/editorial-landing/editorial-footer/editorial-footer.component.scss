@@ -1,0 +1,104 @@
+.heritage-foot {
+  position: relative;
+  margin-top: clamp(3rem, 8vw, 5rem);
+  background: var(--surface);
+  color: var(--primary-container);
+}
+
+.heritage-foot__torn {
+  position: absolute;
+  top: -20px;
+  left: 0;
+  width: 100%;
+  height: 2.5rem;
+  background: var(--surface);
+  transform: rotate(180deg);
+  pointer-events: none;
+}
+
+.heritage-foot__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2rem);
+  text-align: center;
+}
+
+.heritage-foot__brand {
+  margin: 0;
+  font-family: var(--font-headline);
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.04em;
+  color: var(--primary-container);
+}
+
+.heritage-foot__contact {
+  max-width: 32rem;
+}
+
+.heritage-foot__contact-line {
+  margin: 0.25rem 0;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--primary-container) 72%, transparent);
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 3px;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--secondary);
+    }
+  }
+}
+
+.heritage-foot__nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1rem, 3vw, 2rem);
+
+  a {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--primary-container) 70%, transparent);
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-underline-offset: 4px;
+    transition:
+      color 0.2s ease,
+      transform 0.2s ease;
+
+    &:hover {
+      color: var(--secondary);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.heritage-foot__icons {
+  display: flex;
+  gap: 1.5rem;
+  color: var(--outline);
+  margin-top: 0.5rem;
+}
+
+.heritage-foot__legal {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--outline) 65%, transparent);
+}

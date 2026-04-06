@@ -1,0 +1,25 @@
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/out-tsc/
+
+# Backend
+backend/target/
+backend/src/main/resources/application-local.properties
+uploads/
+backend/uploads/
+
+*.class
+*.jar
+*.war
+
+# Deploy secrets (copy from env.prod.example)
+.env
+
+# IDE / OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db

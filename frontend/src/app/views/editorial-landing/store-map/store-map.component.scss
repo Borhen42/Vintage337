@@ -1,0 +1,75 @@
+.store-map {
+  padding: clamp(2.5rem, 6vw, 4rem) clamp(1.25rem, 4vw, 2.5rem);
+  background: var(--surface-container-low);
+}
+
+.store-map__inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 1.75rem);
+
+  @media (min-width: 768px) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+    align-items: start;
+  }
+}
+
+.store-map__intro {
+  padding-top: 0.25rem;
+}
+
+.store-map__title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-headline);
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+  font-weight: 700;
+  font-style: italic;
+  color: var(--primary-container);
+}
+
+.store-map__address {
+  margin: 0 0 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--on-surface-variant);
+}
+
+.store-map__external {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--secondary);
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 4px;
+
+  &:hover {
+    color: var(--primary-container);
+  }
+}
+
+.store-map__frame {
+  width: 100%;
+  min-height: clamp(220px, 42vw, 380px);
+  height: clamp(220px, 42vw, 380px);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(29, 28, 22, 0.1);
+  z-index: 0;
+  position: relative;
+  background: var(--surface-container);
+}
+
+/* Leaflet mounts on this node — fill frame and isolate stacking */
+.store-map__frame.leaflet-container {
+  width: 100%;
+  height: clamp(220px, 42vw, 380px);
+  min-height: clamp(220px, 42vw, 380px);
+  font-family: var(--font-body);
+  outline: none;
+}

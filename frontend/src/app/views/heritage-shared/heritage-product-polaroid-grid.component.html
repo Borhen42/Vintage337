@@ -1,0 +1,66 @@
+@if (loadError()) {
+  <p class="archive-empty" role="alert">{{ errorMessage() }}</p>
+} @else if (products().length === 0 && emptyMessage()) {
+  <p class="archive-empty">{{ emptyMessage() }}</p>
+}
+
+<div class="archive-grid">
+  @for (p of products(); track p.id; let i = $index) {
+    <article [class]="'archive-polaroid ' + polaroidMod(i)">
+      <a [routerLink]="['/product', p.id]" class="archive-polaroid__link-card">
+      <span class="archive-polaroid__tape" aria-hidden="true"></span>
+      <div class="archive-polaroid__frame">
+        <div class="archive-polaroid__img-wrap">
+          <img
+            [class]="'archive-polaroid__img archive-polaroid__img--' + imageToneClass(i)"
+            [src]="p.imageUrl | uploadSrc"
+            [alt]="p.name"
+            width="640"
+            height="640"
+            loading="lazy"
+            decoding="async"
+          />
+          <div class="archive-polaroid__wash" aria-hidden="true"></div>
+          @if (showQuickAdd(i, p)) {
+            <span class="archive-polaroid__fab" aria-hidden="true" title="Quick add">+</span>
+          }
+        </div>
+        <div class="archive-polaroid__caption">
+          <div>
+            <p class="archive-polaroid__name">{{ p.name }}</p>
+            <p class="archive-polaroid__meta">{{ formatMeta(p) }}</p>
+            <p class="archive-polaroid__price">{{ formatPrice(p.price) }}</p>
+          </div>
+          @if (showSeal(i, p)) {
+            <div class="archive-polaroid__seal" aria-hidden="true" title="Authenticated">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                  d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"
+                />
+              </svg>
+            </div>
+          }
+        </div>
+      </div>
+      </a>
+    </article>
+
+    @if (showPlaceholderTile() && i === placeholderAfterIndex()) {
+      <div class="archive-placeholder-tile" aria-hidden="true">
+        <span class="archive-placeholder-tile__text">{{ placeholderText() }}</span>
+      </div>
+    }
+  }
+
+  @if (
+    showPlaceholderTile() &&
+    showPlaceholderWhenFew() &&
+    products().length > 0 &&
+    products().length < 3 &&
+    !loadError()
+  ) {
+    <div class="archive-placeholder-tile" aria-hidden="true">
+      <span class="archive-placeholder-tile__text">{{ placeholderText() }}</span>
+    </div>
+  }
+</div>

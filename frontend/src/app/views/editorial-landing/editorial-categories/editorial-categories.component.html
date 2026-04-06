@@ -1,0 +1,159 @@
+<section class="heritage-bento" id="heritage-series" aria-labelledby="heritage-bento-title">
+  <div class="heritage-bento__head reveal-block">
+    <div>
+      <h2 id="heritage-bento-title" class="heritage-bento__title">The Heritage Series</h2>
+      @if (livePair(); as pair) {
+        <p class="heritage-bento__subtitle">
+          Latest vault intake · Est. {{ vaultYear(pair.featured) }}
+        </p>
+      } @else {
+        <p class="heritage-bento__subtitle">Batch No. 0337-A · Summer release</p>
+      }
+    </div>
+    <a routerLink="/catalogue" class="heritage-bento__view-all">View all</a>
+  </div>
+
+  @if (!catalog.listHydrated()) {
+    <p class="heritage-bento__pending reveal-block" role="status">Syncing pieces from the vault…</p>
+  } @else if (livePair(); as pair) {
+    <div class="heritage-bento__grid">
+      <article
+        class="heritage-bento__feature parallax-wrap reveal-block heritage-bento--clickable"
+        [routerLink]="['/product', pair.featured.id]"
+        tabindex="0"
+      >
+        <div class="heritage-bento__feature-inner film-grain vintage-overlay">
+          @if (primaryImage(pair.featured)) {
+            <img
+              class="heritage-bento__img img-parallax"
+              [src]="primaryImage(pair.featured)"
+              width="1200"
+              height="1600"
+              [alt]="pair.featured.name"
+              loading="lazy"
+              decoding="async"
+            />
+          } @else {
+            <div class="heritage-bento__img heritage-bento__img--empty img-parallax" role="img" [attr.aria-label]="pair.featured.name"></div>
+          }
+          <div class="heritage-bento__grad" aria-hidden="true"></div>
+          <div class="heritage-bento__tags">
+            <span class="heritage-bento__tag heritage-bento__tag--dark">Heritage selection</span>
+            <span class="heritage-bento__tag heritage-bento__tag--brass" aria-hidden="true">★</span>
+          </div>
+          <div class="heritage-bento__feature-caption">
+            <h3 class="heritage-bento__feature-name">{{ pair.featured.name }}</h3>
+            <p class="heritage-bento__feature-meta">{{ seriesMeta(pair.featured) }}</p>
+          </div>
+        </div>
+      </article>
+
+      <div class="heritage-bento__side">
+        <article
+          class="heritage-card heritage-card--product reveal-block heritage-bento--clickable"
+          [routerLink]="['/product', pair.side.id]"
+          tabindex="0"
+        >
+          
+          <div class="heritage-card__media">
+            @if (primaryImage(pair.side)) {
+              <img
+                [src]="primaryImage(pair.side)"
+                width="900"
+                height="1200"
+                [alt]="pair.side.name"
+                loading="lazy"
+                decoding="async"
+              />
+            } @else {
+              <div class="heritage-card__media-empty" role="img" [attr.aria-label]="pair.side.name"></div>
+            }
+          </div>
+          <h4 class="heritage-card__name">{{ pair.side.name }}</h4>
+          <p class="heritage-card__spec">{{ pair.side.category }}</p>
+          <p class="heritage-card__price">{{ formatPrice(pair.side.price) }}</p>
+          <div class="heritage-card__sizes" role="group" [attr.aria-label]="'Sizes for ' + pair.side.name">
+            @for (sz of displaySizes(pair.side); track sz) {
+              <span
+                class="heritage-card__size ticket-stub"
+                [class.heritage-card__size--active]="sz === highlightedSize(pair.side)"
+                >{{ sz }}</span
+              >
+            }
+          </div>
+        </article>
+
+        <div class="heritage-club film-grain reveal-block" id="about-strip">
+          <div class="heritage-club__content">
+            <h3 class="heritage-club__title">The archive club</h3>
+            <p class="heritage-club__text">
+              Accès anticipé aux drops limités et pièces deadstock réservées aux membres.
+            </p>
+            <label class="visually-hidden" for="club-email">Email</label>
+            <input id="club-email" class="heritage-club__input" type="email" placeholder="Votre email" autocomplete="email" />
+            <button type="button" class="heritage-club__submit">Join the crew</button>
+          </div>
+          <span class="heritage-club__watermark" aria-hidden="true">Club</span>
+        </div>
+      </div>
+    </div>
+  } @else {
+    <div class="heritage-bento__grid">
+      <article class="heritage-bento__feature parallax-wrap reveal-block">
+        <div class="heritage-bento__feature-inner film-grain vintage-overlay">
+          <img
+            class="heritage-bento__img img-parallax"
+            src="assets/imgs/Model-1/product-1.png"
+            width="1200"
+            height="1600"
+            alt="Lookbook — archive wind-breaker"
+          />
+          <div class="heritage-bento__grad" aria-hidden="true"></div>
+          <div class="heritage-bento__tags">
+            <span class="heritage-bento__tag heritage-bento__tag--dark">Heritage selection</span>
+            <span class="heritage-bento__tag heritage-bento__tag--brass" aria-hidden="true">★</span>
+          </div>
+          <div class="heritage-bento__feature-caption">
+            <h3 class="heritage-bento__feature-name">‘Archive’ wind-breaker</h3>
+            <p class="heritage-bento__feature-meta">Lightweight nylon · Heritage cream</p>
+          </div>
+        </div>
+      </article>
+
+      <div class="heritage-bento__side">
+        <article class="heritage-card heritage-card--product reveal-block">
+          
+          <div class="heritage-card__media">
+            <img
+              src="assets/imgs/Model-1/product-2.png"
+              width="900"
+              height="1200"
+              alt="Industrial field jacket"
+            />
+          </div>
+          <h4 class="heritage-card__name">Modern industrial shell</h4>
+          <p class="heritage-card__spec">Deep forest archive</p>
+          <p class="heritage-card__price">{{ formatPrice(128) }}</p>
+          <div class="heritage-card__sizes" role="group" aria-label="Tailles">
+            <button type="button" class="heritage-card__size ticket-stub">S</button>
+            <button type="button" class="heritage-card__size ticket-stub heritage-card__size--active">M</button>
+            <button type="button" class="heritage-card__size ticket-stub">L</button>
+          </div>
+        </article>
+
+        <div class="heritage-club film-grain reveal-block" id="about-strip">
+          <div class="heritage-club__content">
+            <h3 class="heritage-club__title">The archive club</h3>
+            <p class="heritage-club__text">
+              Accès anticipé aux drops limités et pièces deadstock réservées aux membres.
+            </p>
+            <label class="visually-hidden" for="club-email-fallback">Email</label>
+            <input id="club-email-fallback" class="heritage-club__input" type="email" placeholder="Votre email" autocomplete="email" />
+            <button type="button" class="heritage-club__submit">Join the crew</button>
+          </div>
+          <span class="heritage-club__watermark" aria-hidden="true">Club</span>
+        </div>
+      </div>
+    </div>
+  }
+</section>

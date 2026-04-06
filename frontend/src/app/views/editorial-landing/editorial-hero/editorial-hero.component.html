@@ -1,0 +1,67 @@
+<section class="heritage-hero film-grain" aria-labelledby="heritage-hero-title">
+  <div class="heritage-hero__watermark" aria-hidden="true">
+    <span class="heritage-hero__watermark-num watermark-text">337</span>
+  </div>
+
+  <div class="heritage-hero__bg vintage-overlay">
+    <img
+      class="heritage-hero__photo"
+      src="assets/imgs/background.png"
+      alt=""
+      width="2000"
+      height="3000"
+      fetchpriority="high"
+    />
+  </div>
+
+  <div class="heritage-hero__content">
+    <div class="heritage-hero__emblem">
+      <div class="heritage-hero__emblem-ring">
+        <img
+          class="heritage-hero__emblem-img"
+          [src]="heroLogoSrc()"
+          (error)="onHeroLogoError()"
+          alt="Vintage 337 — Est. 1999"
+          width="280"
+          height="280"
+          decoding="async"
+        />
+      </div>
+    </div>
+
+    <div class="heritage-hero__kicker">
+      <span class="heritage-hero__rule" aria-hidden="true"></span>
+      <span class="heritage-hero__kicker-text">Heritage archive</span>
+      <span class="heritage-hero__rule" aria-hidden="true"></span>
+    </div>
+
+    <h1 id="heritage-hero-title" class="heritage-hero__title">
+      Est. 1999 — Stay true
+    </h1>
+
+    <p class="heritage-hero__lede">
+      Pensé pour l’artisan moderne. Inspiré par l’esthétique brute des années 90 et le travail du denim et du cuir.
+    </p>
+
+    <a class="heritage-hero__cta" href="#heritage-series">
+      <span class="heritage-hero__cta-dash" aria-hidden="true"></span>
+      <span class="heritage-hero__cta-inner">
+        <svg class="heritage-hero__star" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z" />
+        </svg>
+        <span>Shop the drop</span>
+        <svg class="heritage-hero__star" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z" />
+        </svg>
+      </span>
+    </a>
+  </div>
+
+  <div class="heritage-hero__badge" aria-hidden="true">
+    <div class="heritage-hero__badge-ring">
+      <span class="heritage-hero__badge-line heritage-hero__badge-line--accent">Authentic</span>
+      <span class="heritage-hero__badge-num">99</span>
+      <span class="heritage-hero__badge-line">Workwear</span>
+    </div>
+  </div>
+</section>

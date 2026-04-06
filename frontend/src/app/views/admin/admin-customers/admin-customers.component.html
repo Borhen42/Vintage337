@@ -1,0 +1,93 @@
+<div class="admin-form-page admin-form-page--wide admin-customers film-grain">
+  <header class="admin-form-page__head">
+    <p class="admin-form-page__kicker">Heritage archive · vault access</p>
+    <h1 class="admin-form-page__title">Customers</h1>
+    <p class="admin-form-page__lead">
+      Promote members to <strong>admin</strong>, <strong>block</strong> sign-in, or <strong>remove</strong> accounts.
+    </p>
+    <a routerLink="/admin/dashboard" class="admin-form-page__back">&larr; Back to overview</a>
+  </header>
+
+  @if (loading()) {
+    <p class="admin-customers__state">Loading accounts…</p>
+  } @else if (error()) {
+    <p class="admin-customers__err">{{ error() }}</p>
+    <button type="button" class="admin-customers__retry" (click)="load()">Retry</button>
+  } @else {
+    <div class="admin-customers__panel film-grain">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Email</th>
+              <th>Name</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Joined</th>
+              <th class="admin-table__right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (u of users(); track u.id) {
+              <tr [class.admin-customers__row--blocked]="u.blocked">
+                <td class="admin-table__mono">{{ u.email }}</td>
+                <td>{{ u.fullName || '—' }}</td>
+                <td>
+                  <span
+                    class="admin-badge"
+                    [class.admin-badge--admin]="u.role === 'ADMIN'"
+                    [class.admin-badge--customer]="u.role === 'CUSTOMER'"
+                  >
+                    {{ u.role }}
+                  </span>
+                </td>
+                <td>{{ u.blocked ? 'Blocked' : 'Active' }}</td>
+                <td class="admin-table__muted">{{ u.createdAt | date: 'mediumDate' }}</td>
+                <td class="admin-table__right">
+                  <div class="admin-customers__actions">
+                    @if (u.role !== 'ADMIN') {
+                      <button
+                        type="button"
+                        class="admin-customers__btn admin-customers__btn--primary"
+                        [disabled]="busyId() === u.id"
+                        (click)="makeAdmin(u)"
+                      >
+                        Make admin
+                      </button>
+                    }
+                    @if (u.role === 'ADMIN') {
+                      <button
+                        type="button"
+                        class="admin-customers__btn"
+                        [disabled]="busyId() === u.id"
+                        (click)="makeCustomer(u)"
+                      >
+                        Make customer
+                      </button>
+                    }
+                    <button
+                      type="button"
+                      class="admin-customers__btn"
+                      [disabled]="busyId() === u.id"
+                      (click)="toggleBlock(u)"
+                    >
+                      {{ u.blocked ? 'Unblock' : 'Block' }}
+                    </button>
+                    <button
+                      type="button"
+                      class="admin-customers__btn admin-customers__btn--danger"
+                      [disabled]="busyId() === u.id"
+                      (click)="remove(u)"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>

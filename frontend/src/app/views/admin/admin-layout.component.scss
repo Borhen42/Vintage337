@@ -1,0 +1,320 @@
+.admin-root {
+  min-height: 100vh;
+  background: var(--surface);
+  color: var(--on-surface);
+}
+
+.admin-sidenav {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: 16rem;
+  height: 100vh;
+  padding: 2rem 0;
+  background: #3d2314;
+  box-shadow: 4px 0 24px rgba(29, 28, 22, 0.15);
+  font-family: var(--font-headline);
+  letter-spacing: -0.02em;
+}
+
+.admin-sidenav__brand {
+  padding: 0 1.5rem;
+  margin-bottom: 2.5rem;
+}
+
+.admin-sidenav__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--surface);
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+}
+
+.admin-sidenav__tag {
+  margin: 0.25rem 0 0;
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(254, 249, 239, 0.6);
+}
+
+.admin-sidenav__nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.admin-sidenav__link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0 0.75rem 1.5rem;
+  margin-right: 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: rgba(254, 249, 239, 0.72);
+  text-decoration: none;
+  border-radius: 0 999px 999px 0;
+  transition:
+    color 0.2s,
+    background 0.2s;
+
+  &:hover {
+    color: var(--surface);
+    background: rgba(254, 249, 239, 0.1);
+  }
+}
+
+.admin-sidenav__link--active {
+  color: var(--surface) !important;
+  background: var(--secondary);
+  font-weight: 700;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.admin-sidenav__link--disabled {
+  cursor: default;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.admin-sidenav__icon {
+  display: flex;
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+
+.admin-sidenav__footer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0 1.5rem;
+  margin-top: auto;
+}
+
+.admin-sidenav__store-btn {
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  color: #3d2314;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: scale(0.97);
+  }
+}
+
+.admin-sidenav__signout {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(254, 249, 239, 0.25);
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: rgba(254, 249, 239, 0.85);
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+
+  &:hover {
+    background: rgba(254, 249, 239, 0.1);
+    color: var(--surface);
+  }
+}
+
+.admin-shell {
+  margin-left: 16rem;
+  min-height: 100vh;
+}
+
+.admin-topbar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(100% - 16rem);
+  height: 5rem;
+  padding: 0 2.5rem;
+  background: rgba(254, 249, 239, 0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(61, 35, 20, 0.1);
+  font-family: var(--font-body);
+  letter-spacing: 0.02em;
+}
+
+.admin-topbar__search {
+  position: relative;
+  display: block;
+  width: 24rem;
+  max-width: 40vw;
+  margin: 0;
+}
+
+.admin-topbar__search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--on-surface-variant);
+  pointer-events: none;
+}
+
+.admin-topbar__input {
+  width: 100%;
+  padding: 0.5rem 0.75rem 0.5rem 2.5rem;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--surface-container-low);
+  font-family: inherit;
+  font-size: 0.875rem;
+  color: var(--on-surface);
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 1px var(--tertiary-fixed-dim);
+  }
+}
+
+.admin-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.admin-topbar__icon-btn {
+  display: flex;
+  padding: 0.25rem;
+  border: none;
+  background: transparent;
+  color: rgba(61, 35, 20, 0.55);
+  cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--secondary);
+  }
+}
+
+.admin-topbar__icon-btn--bell {
+  position: relative;
+}
+
+.admin-topbar__badge {
+  position: absolute;
+  top: -2px;
+  right: -4px;
+  min-width: 1.125rem;
+  height: 1.125rem;
+  padding: 0 0.25rem;
+  border-radius: 999px;
+  background: var(--secondary);
+  color: var(--surface);
+  font-size: 0.625rem;
+  font-weight: 800;
+  line-height: 1.125rem;
+  text-align: center;
+}
+
+.admin-pending-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(153, 71, 3, 0.12), rgba(61, 35, 20, 0.08));
+  border: 1px solid rgba(153, 71, 3, 0.35);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  color: #3d2314;
+
+  p {
+    margin: 0;
+  }
+}
+
+.admin-pending-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.admin-pending-banner__primary {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--secondary);
+  color: var(--surface);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-pending-banner__dismiss {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(61, 35, 20, 0.25);
+  border-radius: var(--radius-lg);
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #3d2314;
+  cursor: pointer;
+}
+
+.admin-topbar__user {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-left: 1rem;
+  border-left: 1px solid rgba(212, 195, 188, 0.45);
+}
+
+.admin-topbar__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--primary-container);
+  color: var(--surface);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.admin-topbar__name {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #3d2314;
+}
+
+.admin-content {
+  padding: 5rem 2.5rem 2.5rem;
+  min-height: 100vh;
+}

@@ -1,0 +1,8 @@
+# Copy to /etc/caddy/Caddyfile (or include from main Caddyfile).
+# Replace api.example.com with your API hostname.
+# Ensure Docker maps the API to 127.0.0.1:8080 (default in docker-compose.prod.yml).
+
+api.example.com {
+	encode gzip zstd
+	reverse_proxy 127.0.0.1:8080
+}

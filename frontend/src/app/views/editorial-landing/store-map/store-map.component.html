@@ -1,0 +1,20 @@
+<section class="store-map" id="store-locator" aria-labelledby="store-map-heading">
+  <div class="store-map__inner">
+    <div class="store-map__intro">
+      <h2 id="store-map-heading" class="store-map__title">Store locator</h2>
+      <p class="store-map__address">
+        Centre commercial le Palmaruim Tunis · Boutique n° 156<br />
+        Tunis, Tunisia · 1001
+      </p>
+      <a
+        class="store-map__external"
+        [href]="'https://www.openstreetmap.org/?mlat=' + lat + '&mlon=' + lng + '#map=17/' + lat + '/' + lng"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Open full map
+      </a>
+    </div>
+    <div class="store-map__frame" #mapHost role="application" aria-label="Carte OpenStreetMap, position de la boutique"></div>
+  </div>
+</section>

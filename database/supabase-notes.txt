@@ -1,0 +1,35 @@
+Vintage 337 — PostgreSQL / Supabase
+====================================
+
+Why mvn fails on Windows with Supabase
+----------------------------------------
+- Direct host db.<project>.supabase.co is IPv6-only. Many Windows setups get UnknownHostException.
+- Your PC also reported "Network is unreachable" for IPv6 — no IPv6 route.
+- Session pooler (IPv4) needs the exact host from your project: Connect → Session pooler (do not guess REGION).
+
+Fastest way to run the API locally
+----------------------------------
+1. Install Docker Desktop (or Podman).
+2. From the Vintage337 repo root:  docker compose up -d
+   Postgres is exposed on host port 5433 (not 5432) so it does not clash with another PostgreSQL on your PC.
+3. cd backend && mvn spring-boot:run
+   Uses jdbc:postgresql://127.0.0.1:5433/vintage337 user postgres / password postgres.
+
+If you still get password errors: another app may be using 5433, or an old container exists. Run:
+   docker compose down -v
+   docker compose up -d
+
+Using Supabase in the cloud
+----------------------------
+1. Dashboard → green "Connect" → "Session pooler".
+2. Copy the URI. Example shape:
+   postgresql://postgres.xxxxx:[PASSWORD]@aws-0-REGION.pooler.supabase.com:5432/postgres
+3. In application-local.properties set:
+   spring.datasource.url=jdbc:postgresql://aws-0-REGION.pooler.supabase.com:5432/postgres?sslmode=require
+   spring.datasource.username=postgres.xxxxx    (exact string from URI)
+   spring.datasource.password=your password
+4. Comment out or remove the localhost lines above.
+
+Optional: Supabase IPv4 add-on for direct db.* connection (paid).
+
+First API start seeds: admin@vintage337.com / heritage337, user@vintage337.com / heritage337

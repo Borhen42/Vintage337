@@ -1,0 +1,11 @@
+.heritage-landing {
+  min-height: 100vh;
+  background: var(--surface);
+  color: var(--on-surface);
+}
+
+.heritage-landing main {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}

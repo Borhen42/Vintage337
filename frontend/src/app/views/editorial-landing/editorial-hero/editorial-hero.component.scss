@@ -1,0 +1,228 @@
+.heritage-hero {
+  position: relative;
+  min-height: min(921px, 100dvh);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: clamp(6rem, 18vh, 10rem) clamp(1.25rem, 4vw, 2rem) clamp(4rem, 12vh, 8rem);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.heritage-hero__watermark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.heritage-hero__watermark-num {
+  font-family: var(--font-headline);
+  font-size: clamp(8rem, 40vw, 28rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.heritage-hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 0.32;
+}
+
+.heritage-hero__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  filter: grayscale(0.35) sepia(0.12) brightness(0.92);
+}
+
+.heritage-hero__content {
+  position: relative;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 48rem;
+}
+
+.heritage-hero__emblem {
+  margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+  flex-shrink: 0;
+}
+
+.heritage-hero__emblem-ring {
+  width: clamp(8.5rem, 26vw, 15rem);
+  height: clamp(8.5rem, 26vw, 15rem);
+  border-radius: 50%;
+  padding: clamp(0.35rem, 1.2vw, 0.55rem);
+  background: color-mix(in srgb, var(--surface-container-low) 92%, transparent);
+  border: 3px dashed var(--tertiary-fixed-dim);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--primary-container) 12%, transparent),
+    0 16px 48px rgba(29, 28, 22, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-2deg);
+}
+
+.heritage-hero__emblem-img {
+  width: 86%;
+  height: 86%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 8px rgba(37, 15, 3, 0.2));
+}
+
+.heritage-hero__kicker {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.heritage-hero__rule {
+  width: 3rem;
+  height: 1px;
+  background: var(--outline-variant);
+}
+
+.heritage-hero__kicker-text {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+
+.heritage-hero__title {
+  margin: 0 0 1rem;
+  font-family: var(--font-headline);
+  font-size: clamp(2.5rem, 8vw, 5.5rem);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--primary-container);
+}
+
+.heritage-hero__lede {
+  margin: 0 0 2.5rem;
+  font-family: var(--font-headline);
+  font-size: clamp(1rem, 2.2vw, 1.25rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.55;
+  color: var(--on-surface-variant);
+}
+
+.heritage-hero__cta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.15rem 2.75rem;
+  background: linear-gradient(180deg, var(--secondary) 0%, color-mix(in srgb, var(--secondary) 88%, black) 100%);
+  color: #fff;
+  text-decoration: none;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px color-mix(in srgb, var(--secondary) 35%, transparent);
+  transition:
+    background 0.25s ease,
+    transform 0.15s ease;
+
+  &:hover {
+    background: var(--secondary-container);
+    color: #321200;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.heritage-hero__cta-dash {
+  position: absolute;
+  inset: 4px;
+  border: 2px dashed color-mix(in srgb, #fff 30%, transparent);
+  border-radius: calc(var(--radius-lg) - 2px);
+  pointer-events: none;
+}
+
+.heritage-hero__cta-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-body);
+  font-size: clamp(0.85rem, 1.5vw, 1.05rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.heritage-hero__star {
+  flex-shrink: 0;
+  opacity: 0.95;
+}
+
+.heritage-hero__badge {
+  position: absolute;
+  bottom: clamp(1.5rem, 4vw, 2.5rem);
+  right: clamp(1rem, 4vw, 2.5rem);
+  z-index: 20;
+  display: none;
+
+  @media (min-width: 768px) {
+    display: block;
+  }
+}
+
+.heritage-hero__badge-ring {
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 50%;
+  border: 4px dashed var(--tertiary-fixed-dim);
+  padding: 0.35rem;
+  background: var(--surface-container-low);
+  box-shadow: 0 12px 32px rgba(29, 28, 22, 0.08);
+  transform: rotate(12deg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.heritage-hero__badge-line {
+  font-size: 0.55rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  color: var(--primary);
+
+  &--accent {
+    color: var(--secondary);
+  }
+}
+
+.heritage-hero__badge-num {
+  font-family: var(--font-headline);
+  font-size: 1.35rem;
+  font-weight: 900;
+  font-style: italic;
+  line-height: 1;
+  color: var(--primary-container);
+}

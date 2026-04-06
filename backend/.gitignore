@@ -1,0 +1,9 @@
+/target/
+# Local DB secrets — never commit
+application-local.properties
+src/main/resources/application-local.properties
+*.class
+*.jar
+*.war
+*.iml
+.idea/

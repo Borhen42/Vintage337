@@ -1,0 +1,201 @@
+<div class="admin-form-page film-grain">
+  <header class="admin-form-page__head">
+    <h1 class="admin-form-page__title">{{ isEdit ? 'Edit product' : 'Add product' }}</h1>
+    <p class="admin-form-page__lead">
+      @if (isEdit) {
+        Update details, variants, or photos. Choosing new images replaces the whole gallery. Save to push changes
+        to the Archive, Catalogue, and Collection.
+      } @else {
+        Register a new heritage piece: choose a category, set the base price, add size/color/stock rows, and upload
+        gallery images. Totals appear on the Archive, Catalogue, and Collection pages.
+      }
+    </p>
+    <a routerLink="/admin/dashboard" class="admin-form-page__back">&larr; Back to overview</a>
+  </header>
+
+  @if (loadError) {
+    <p class="admin-field__error admin-form__banner" role="alert">Could not load this product.</p>
+    <a routerLink="/admin/dashboard" class="admin-form-page__back">Back to overview</a>
+  } @else if (loadingProduct) {
+    <p class="admin-form-page__lead">Loading product…</p>
+  } @else {
+  <form class="admin-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <section class="admin-form-section" aria-label="Product name">
+      <label class="admin-field">
+        <span class="admin-field__label">Name</span>
+        <input
+          class="admin-field__input"
+          type="text"
+          formControlName="name"
+          autocomplete="off"
+          placeholder="e.g. Vintage washed hoodie"
+        />
+        @if (submitted && form.controls.name.invalid) {
+          <span class="admin-field__error">Name is required.</span>
+        }
+      </label>
+    </section>
+
+    <section class="admin-form-section" aria-label="Category and price">
+      <div class="admin-form__row">
+        <label class="admin-field">
+          <span class="admin-field__label">Category</span>
+          <select class="admin-field__input admin-field__input--select" formControlName="category">
+            @for (c of categories; track c) {
+              <option [value]="c">{{ c }}</option>
+            }
+          </select>
+          @if (submitted && form.controls.category.invalid) {
+            <span class="admin-field__error">Category is required.</span>
+          }
+        </label>
+
+        <label class="admin-field">
+          <span class="admin-field__label">Price (TND)</span>
+          <input class="admin-field__input" type="number" formControlName="price" min="0" step="0.01" placeholder="0.00" />
+          @if (submitted && form.controls.price.invalid) {
+            <span class="admin-field__error">Enter a valid price.</span>
+          }
+        </label>
+      </div>
+    </section>
+
+    <section class="admin-form-section admin-form-section--variants" aria-label="Variants">
+      <div class="admin-variants" formArrayName="variants">
+        <div class="admin-variants__head">
+          <div>
+            <h2 class="admin-form-section__title">Sizes, colors &amp; stock</h2>
+            <p class="admin-variants__hint">
+              Sizes match the category: tops and sweatpants use XS-XXL; jeans use waist; sneakers use EU sizes.
+            </p>
+          </div>
+          <button type="button" class="admin-variants__add" (click)="addVariantRow()">+ Add row</button>
+        </div>
+
+        <div class="admin-variants__table" role="table">
+          <div class="admin-variants__row admin-variants__row--head" role="row">
+            <span role="columnheader">Size</span>
+            <span role="columnheader">Color</span>
+            <span role="columnheader">Pieces</span>
+            <span class="admin-variants__head-action" role="columnheader"></span>
+          </div>
+          @for (row of variants.controls; track $index; let i = $index) {
+            <div class="admin-variants__panel" role="rowgroup">
+              <div class="admin-variants__row" role="row" [formGroup]="$any(row)">
+                <label class="admin-variants__cell">
+                  <span class="admin-variants__mobile-label">Size</span>
+                  <select class="admin-field__input admin-field__input--select" formControlName="size">
+                    @for (sz of sizeOptionsForRow(); track sz) {
+                      <option [value]="sz">{{ sz }}</option>
+                    }
+                  </select>
+                </label>
+                <label class="admin-variants__cell">
+                  <span class="admin-variants__mobile-label">Color</span>
+                  <input class="admin-field__input" type="text" formControlName="color" placeholder="e.g. Washed black" />
+                </label>
+                <label class="admin-variants__cell">
+                  <span class="admin-variants__mobile-label">Pieces</span>
+                  <input class="admin-field__input" type="number" formControlName="stock" min="0" step="1" placeholder="0" />
+                </label>
+                <div class="admin-variants__cell admin-variants__cell--action">
+                  <button
+                    type="button"
+                    class="admin-variants__remove"
+                    (click)="removeVariant(i)"
+                    [disabled]="variants.length <= 1"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+              @if (submitted && row.invalid) {
+                <span class="admin-field__error admin-variants__row-error">Fill size, color, and a valid stock count.</span>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="admin-form-section" aria-label="Photos">
+      <span class="admin-field__label">Photos <span class="admin-field__count">(1-12)</span></span>
+      <label
+        class="admin-upload"
+        [class.admin-upload--active]="fileDropActive"
+        (dragenter)="onFileDragEnter($event)"
+        (dragleave)="onFileDragLeave($event)"
+        (dragover)="onFileDragOver($event)"
+        (drop)="onFileDrop($event)"
+      >
+        <input
+          id="admin-product-files"
+          class="admin-upload__input"
+          type="file"
+          accept="image/*"
+          multiple
+          (change)="onFilesSelected($event)"
+        />
+        <span class="admin-upload__zone">
+          <span class="admin-upload__icon" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 16V8m0 0l-3 3m3-3l3 3M4 16.5A2.5 2.5 0 006.5 19h11a2.5 2.5 0 002.5-2.5v-7A2.5 2.5 0 0017.5 7h-2.1a1 1 0 01-.9-.55l-.45-.9A2 2 0 0012.63 5h-1.26a2 2 0 00-1.79 1.1l-.45.9a1 1 0 01-.9.55H6.5A2.5 2.5 0 004 9.5v7z"
+                stroke="currentColor"
+                stroke-width="1.35"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="admin-upload__title">Drop images here or click to browse</span>
+          <span class="admin-upload__meta">PNG, JPG, WebP - up to 12 files</span>
+          @if (pendingFiles.length) {
+            <span class="admin-upload__status">{{ pendingFiles.length }} new image(s) selected (replaces gallery)</span>
+          } @else if (isEdit && initialGalleryUrls.length) {
+            <span class="admin-upload__status">Current gallery kept — drop new files to replace all</span>
+          }
+        </span>
+      </label>
+      @if (imageError) {
+        <span class="admin-field__error">{{ imageError }}</span>
+      }
+      @if (submitted && pendingFiles.length === 0 && initialGalleryUrls.length === 0 && !imageError) {
+        <span class="admin-field__error">At least one image is required.</span>
+      }
+      @if (previewDisplayUrls().length) {
+        <div class="admin-gallery-preview">
+          @for (u of previewDisplayUrls(); track u) {
+            <img [src]="u" alt="" class="admin-gallery-preview__thumb" width="96" height="96" />
+          }
+        </div>
+        @if (pendingFiles.length) {
+          <button type="button" class="admin-gallery-preview__clear" (click)="clearImages()">Clear new selection</button>
+        }
+      }
+    </section>
+
+    <section class="admin-form-section" aria-label="Description">
+      <label class="admin-field">
+        <span class="admin-field__label">Description <span class="admin-field__optional">(optional)</span></span>
+        <textarea
+          class="admin-field__textarea"
+          formControlName="description"
+          rows="5"
+          placeholder="Materials, fit notes, story..."
+        ></textarea>
+      </label>
+    </section>
+
+    @if (saveError) {
+      <p class="admin-field__error admin-form__banner" role="alert">{{ saveError }}</p>
+    }
+
+    <div class="admin-form__actions">
+      <button type="submit" class="admin-form__submit ticket-stub" [disabled]="saving">
+        {{ saving ? 'Saving…' : isEdit ? 'Save changes' : 'Add to vault' }}
+      </button>
+    </div>
+  </form>
+  }
+</div>

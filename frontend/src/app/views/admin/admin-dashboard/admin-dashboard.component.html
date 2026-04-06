@@ -1,0 +1,209 @@
+<section class="admin-metrics" aria-label="Key metrics">
+  <article class="admin-metric admin-metric--surface film-grain">
+    <div class="admin-metric__watermark" aria-hidden="true">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" opacity="0.1"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.5V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    </div>
+    <p class="admin-metric__label">Total archivists</p>
+    <h2 class="admin-metric__value">4,281</h2>
+    <div class="admin-metric__trend">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="admin-metric__trend-icon"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
+      <span>12% increase since last drop</span>
+    </div>
+  </article>
+  <article class="admin-metric admin-metric--inverse film-grain">
+    <div class="admin-metric__watermark admin-metric__watermark--light" aria-hidden="true">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" opacity="0.12"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+    </div>
+    <p class="admin-metric__label admin-metric__label--dim">99 drop revenue</p>
+    <h2 class="admin-metric__value admin-metric__value--on-dark">{{ formatPrice(84120) }}</h2>
+    <div class="admin-metric__trend admin-metric__trend--muted">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+      <span>Record breaking season</span>
+    </div>
+  </article>
+  <article class="admin-metric admin-metric--surface film-grain">
+    <div class="admin-metric__watermark" aria-hidden="true">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="currentColor" opacity="0.1"><path d="M20 2H4c-1 0-2 .9-2 2v3.01c0 .72.43 1.34 1 1.69V20c0 1.1 1.1 2 2 2h14c.9 0 2-.9 2-2V8.7c.57-.35 1-.97 1-1.69V4c0-1.1-1-2-2-2zm-5 12H9v-2h6v2zm5-7H4V4h16v3z"/></svg>
+    </div>
+    <p class="admin-metric__label">Items in vault</p>
+    <h2 class="admin-metric__value">{{ catalog.listHydrated() ? productCount() : '—' }}</h2>
+    <div class="admin-metric__trend">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="admin-metric__trend-icon"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+      <span>Products you have added</span>
+    </div>
+  </article>
+</section>
+
+<div class="admin-grid">
+  <div class="admin-grid__main">
+    <section class="admin-chart-card" aria-labelledby="chart-heading">
+      <div class="admin-chart-card__head">
+        <div>
+          <h3 id="chart-heading" class="admin-chart-card__title">Weekly drop engagement</h3>
+          <p class="admin-chart-card__subtitle">Activity metrics for the &lsquo;Iron &amp; Oak&rsquo; collection</p>
+        </div>
+        <div class="admin-chart-card__legend">
+          <span class="admin-chart-card__legend-item"><span class="admin-chart-card__dot admin-chart-card__dot--primary"></span> Engagement</span>
+          <span class="admin-chart-card__legend-item admin-chart-card__legend-item--muted"><span class="admin-chart-card__dot"></span> Previous</span>
+        </div>
+      </div>
+      <div class="admin-chart-card__chart">
+        <svg class="admin-chart-svg" viewBox="0 0 800 200" preserveAspectRatio="none" aria-hidden="true">
+          <line class="admin-chart-svg__grid" x1="0" x2="800" y1="0" y2="0" stroke-dasharray="4" />
+          <line class="admin-chart-svg__grid" x1="0" x2="800" y1="50" y2="50" stroke-dasharray="4" />
+          <line class="admin-chart-svg__grid" x1="0" x2="800" y1="100" y2="100" stroke-dasharray="4" />
+          <line class="admin-chart-svg__grid" x1="0" x2="800" y1="150" y2="150" stroke-dasharray="4" />
+          <path class="admin-chart-svg__prev" d="M0,150 Q100,140 200,160 T400,130 T600,155 T800,140" fill="none" stroke-width="2" />
+          <path class="admin-chart-svg__line" d="M0,160 Q100,120 200,140 T400,60 T600,100 T800,40" fill="none" stroke-linecap="round" stroke-width="4" />
+          <circle cx="200" cy="140" r="4" fill="var(--secondary)" />
+          <circle cx="400" cy="60" r="4" fill="var(--secondary)" />
+          <circle cx="600" cy="100" r="4" fill="var(--secondary)" />
+          <circle cx="800" cy="40" r="6" fill="var(--secondary)" stroke="var(--surface)" stroke-width="2" />
+        </svg>
+        <div class="admin-chart-card__days">
+          <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="admin-table-card film-grain" id="orders" aria-labelledby="table-heading">
+      <div class="admin-table-card__icon" aria-hidden="true">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor" opacity="0.2"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
+      </div>
+      <h3 id="table-heading" class="admin-table-card__title">Recent archives dispatched</h3>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Heritage piece</th>
+              <th>Status</th>
+              <th class="admin-table__right">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="admin-table__mono">#V337-1092</td>
+              <td class="admin-table__strong">Elias Thorne</td>
+              <td class="admin-table__serif">1994 double-knee duck canvas</td>
+              <td><span class="admin-badge admin-badge--shipping">Shipping</span></td>
+              <td class="admin-table__right admin-table__muted">Oct 14, 2023</td>
+            </tr>
+            <tr>
+              <td class="admin-table__mono">#V337-1088</td>
+              <td class="admin-table__strong">Marcus Chen</td>
+              <td class="admin-table__serif">Aged leather archivist vest</td>
+              <td><span class="admin-badge admin-badge--done">Completed</span></td>
+              <td class="admin-table__right admin-table__muted">Oct 12, 2023</td>
+            </tr>
+            <tr>
+              <td class="admin-table__mono">#V337-1085</td>
+              <td class="admin-table__strong">Sarah Jenkins</td>
+              <td class="admin-table__serif">Vintage wool utility overshirt</td>
+              <td><span class="admin-badge admin-badge--process">Processing</span></td>
+              <td class="admin-table__right admin-table__muted">Oct 11, 2023</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <aside class="admin-grid__aside" aria-label="Archive preview and actions">
+    <div class="admin-preview film-grain">
+      <div class="admin-preview__head">
+        <h3 class="admin-preview__title">Archive preview</h3>
+        <a routerLink="/admin/products/new" class="admin-preview__link">Add product</a>
+      </div>
+
+      @if (!catalog.listHydrated()) {
+        <div class="admin-preview__loading" aria-busy="true">
+          <span class="admin-preview__loading-dot" aria-hidden="true"></span>
+          <p>Loading archive preview…</p>
+        </div>
+      } @else if (catalog.loadError()) {
+        <p class="admin-preview__empty">Could not load products from the API.</p>
+        <button type="button" class="admin-preview__retry" (click)="catalog.load()">Retry</button>
+      } @else if (previewProducts().length === 0) {
+        <p class="admin-preview__empty">
+          No pieces in the vault yet.
+          <a routerLink="/admin/products/new">Add your first product</a>
+        </p>
+      } @else {
+        <ul class="admin-preview__list">
+          @for (p of previewProducts(); track p.id) {
+            @let imgSrc = previewPrimarySrc(p);
+            <li class="admin-preview-item">
+              <div class="admin-preview-item__img-wrap film-grain admin-preview-item__torn">
+                @if (imgSrc) {
+                  <img [src]="imgSrc" [alt]="p.name" width="400" height="400" loading="eager" decoding="async" />
+                } @else {
+                  <div class="admin-preview-item__no-img" role="img" [attr.aria-label]="'No photo: ' + p.name">No photo</div>
+                }
+              </div>
+              <div class="admin-preview-item__row">
+                <div>
+                  <p class="admin-preview-item__cat">{{ p.category }}</p>
+                  <h4 class="admin-preview-item__name">{{ p.name }}</h4>
+                </div>
+                <div class="admin-preview-item__meta">
+                  @let s = stockLabel(p.stock);
+                  <span
+                    class="admin-preview-item__stock"
+                    [class.admin-preview-item__stock--out]="s.variant === 'out'"
+                    [class.admin-preview-item__stock--low]="s.variant === 'low'"
+                  >{{ s.text }}</span>
+                  <p class="admin-preview-item__price">{{ formatPrice(p.price) }}</p>
+                </div>
+              </div>
+              <div class="admin-preview-item__actions">
+                <a [routerLink]="['/admin/products', p.id, 'edit']" class="admin-preview-item__btn admin-preview-item__btn--edit">Edit</a>
+                <button
+                  type="button"
+                  class="admin-preview-item__btn admin-preview-item__btn--delete"
+                  [disabled]="deletingId() === p.id"
+                  (click)="removeProduct(p, $event)"
+                >
+                  {{ deletingId() === p.id ? 'Removing…' : 'Remove' }}
+                </button>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    <div class="admin-quick">
+      <h4 class="admin-quick__title">Quick archive actions</h4>
+      <a routerLink="/admin/products/new" class="admin-ticket admin-ticket--primary">
+        <span>Add new product</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
+      </a>
+      <button
+        type="button"
+        class="admin-ticket admin-ticket--surface"
+        [disabled]="shippingExportLoading()"
+        (click)="exportShippingLogs()"
+      >
+        <span>{{ shippingExportLoading() ? 'Preparing…' : 'Export shipping logs' }}</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+      </button>
+    </div>
+  </aside>
+</div>
+
+<footer class="admin-dash-footer">
+  <div class="admin-dash-footer__left">
+    <div class="admin-dash-footer__seal" aria-hidden="true">
+      <span>Est.<br />1999</span>
+    </div>
+    <div>
+      <p class="admin-dash-footer__protocol">Vintage337 heritage protocol</p>
+      <p class="admin-dash-footer__note">
+        All items in this archive are verified for era-specific construction techniques and material authenticity.
+      </p>
+    </div>
+  </div>
+  <p class="admin-dash-footer__copy">&copy; 1999&mdash;2026 Archivist systems. All rights reserved.</p>
+</footer>

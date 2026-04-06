@@ -1,0 +1,104 @@
+<div class="admin-form-page admin-form-page--wide admin-reclamations film-grain">
+  <header class="admin-form-page__head">
+    <p class="admin-form-page__kicker">Heritage archive · correspondence</p>
+    <h1 class="admin-form-page__title">Reclamations</h1>
+    <p class="admin-form-page__lead">
+      Your <strong>reply is stored</strong> in the archive. After saving, your mail client opens so you can send the message to the customer.
+    </p>
+    <a routerLink="/admin/dashboard" class="admin-form-page__back">&larr; Back to overview</a>
+  </header>
+
+  @if (loading()) {
+    <div class="admin-reclamations__loading" aria-busy="true" aria-live="polite">
+      <span class="admin-reclamations__loading-dot" aria-hidden="true"></span>
+      <span class="admin-reclamations__loading-text">Opening the correspondence folio…</span>
+    </div>
+  } @else if (error()) {
+    <div class="admin-reclamations__error-panel" role="alert">
+      <p class="admin-reclamations__error-title">Could not load reclamations</p>
+      <p class="admin-reclamations__err">{{ error() }}</p>
+      <button type="button" class="admin-reclamations__retry ticket-stub" (click)="load()">Retry</button>
+    </div>
+  } @else if (!rows().length) {
+    <div class="admin-reclamations__empty-panel">
+      <p class="admin-reclamations__empty-title">Inbox is quiet</p>
+      <p class="admin-reclamations__empty">No customer reclamations yet. Submissions from the public form will appear here.</p>
+    </div>
+  } @else {
+    <div class="admin-reclamations__list">
+      @for (r of rows(); track r.id) {
+        <article class="admin-reclamations__card">
+          <div class="admin-reclamations__meta">
+            <span
+              class="admin-reclamations__badge"
+              [class.admin-reclamations__badge--done]="hasReply(r)"
+            >
+              {{ hasReply(r) ? 'Replied' : 'Open' }}
+            </span>
+            <div class="admin-reclamations__dates">
+              <span class="admin-reclamations__date-line">
+                <span class="admin-reclamations__date-key">Submitted</span>
+                <span class="admin-reclamations__date-val">{{ r.createdAt | date: 'medium' }}</span>
+              </span>
+              @if (hasReply(r) && r.repliedAt) {
+                <span class="admin-reclamations__date-line admin-reclamations__date-line--reply">
+                  <span class="admin-reclamations__date-key">Replied</span>
+                  <span class="admin-reclamations__date-val">{{ r.repliedAt | date: 'medium' }}</span>
+                </span>
+              }
+            </div>
+          </div>
+
+          <div class="admin-reclamations__customer-block">
+            <span class="admin-reclamations__field-label">From</span>
+            <p class="admin-reclamations__email">{{ r.email }}</p>
+            @if (r.fullName.trim()) {
+              <p class="admin-reclamations__name">{{ r.fullName }}</p>
+            }
+          </div>
+
+          <div class="admin-reclamations__thread">
+            <div class="admin-reclamations__bubble admin-reclamations__bubble--inbound">
+              <span class="admin-reclamations__field-label">Subject</span>
+              <h2 class="admin-reclamations__subject">{{ r.subject }}</h2>
+              <span class="admin-reclamations__field-label">Message</span>
+              <p class="admin-reclamations__message">{{ r.message }}</p>
+            </div>
+
+            @if (hasReply(r)) {
+              <div class="admin-reclamations__bubble admin-reclamations__bubble--outbound">
+                <span class="admin-reclamations__field-label">Your reply (saved in archive)</span>
+                <p class="admin-reclamations__reply-body">{{ r.adminReply }}</p>
+                <button type="button" class="admin-reclamations__mailto" (click)="openMailtoOnly(r)">
+                  Open email to customer
+                </button>
+              </div>
+            } @else {
+              <div class="admin-reclamations__compose">
+                <label class="admin-reclamations__field-label" for="reply-{{ r.id }}">Compose reply</label>
+                <textarea
+                  id="reply-{{ r.id }}"
+                  class="admin-reclamations__textarea"
+                  rows="5"
+                  [ngModel]="draft(r)"
+                  (ngModelChange)="setDraft(r, $event)"
+                  placeholder="Type your reply. It will be saved, then your mail app will open."
+                ></textarea>
+                <div class="admin-reclamations__actions">
+                  <button
+                    type="button"
+                    class="admin-reclamations__submit"
+                    [disabled]="busyId() === r.id"
+                    (click)="submitReply(r)"
+                  >
+                    {{ busyId() === r.id ? 'Saving…' : 'Save reply & open email' }}
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        </article>
+      }
+    </div>
+  }
+</div>

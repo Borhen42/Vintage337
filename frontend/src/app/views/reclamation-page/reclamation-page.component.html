@@ -1,0 +1,46 @@
+<div class="reclamation-page">
+  <app-editorial-navbar />
+
+  <main class="reclamation-main heritage-page-shell">
+    <div class="reclamation-inner">
+      <p class="reclamation-kicker">Contact</p>
+      <h1 class="reclamation-title">Reclamation</h1>
+      <p class="reclamation-lead">
+        Describe your issue. We will review it in the admin console and reply by email when we can.
+      </p>
+
+      @if (success) {
+        <p class="reclamation-success" role="status">Thank you. Your reclamation was submitted.</p>
+        <a routerLink="/" class="reclamation-back">Back to home</a>
+      } @else {
+        <form class="reclamation-form" [formGroup]="form" (ngSubmit)="submit()">
+          <label class="reclamation-field">
+            <span>Full name <span class="optional">(optional)</span></span>
+            <input type="text" formControlName="fullName" autocomplete="name" maxlength="120" />
+          </label>
+          <label class="reclamation-field">
+            <span>Email</span>
+            <input type="email" formControlName="email" autocomplete="email" required />
+            @if (form.controls.email.touched && form.controls.email.invalid) {
+              <span class="reclamation-hint">Enter a valid email.</span>
+            }
+          </label>
+          <label class="reclamation-field">
+            <span>Subject</span>
+            <input type="text" formControlName="subject" maxlength="200" required />
+          </label>
+          <label class="reclamation-field">
+            <span>Message</span>
+            <textarea formControlName="message" rows="6" required></textarea>
+          </label>
+          @if (errorMsg) {
+            <p class="reclamation-error" role="alert">{{ errorMsg }}</p>
+          }
+          <button type="submit" class="reclamation-submit" [disabled]="submitting">
+            {{ submitting ? 'Sending...' : 'Submit' }}
+          </button>
+        </form>
+      }
+    </div>
+  </main>
+</div>

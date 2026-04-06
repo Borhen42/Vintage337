@@ -1,0 +1,120 @@
+<div class="admin-form-page admin-form-page--wide admin-orders film-grain">
+  <header class="admin-form-page__head">
+    <p class="admin-form-page__kicker">Heritage archive · command desk</p>
+    <h1 class="admin-form-page__title">Orders</h1>
+    <p class="admin-form-page__lead">
+      <strong>Accept command</strong> seals the folio: vault stock is decremented and a heritage <strong>command record PDF</strong> downloads.
+      <strong>Reject</strong> cancels a pending command without touching inventory.
+    </p>
+    <a routerLink="/admin/dashboard" class="admin-form-page__back">&larr; Back to overview</a>
+  </header>
+
+  @if (loading()) {
+    <div class="admin-orders__loading" aria-busy="true" aria-live="polite">
+      <span class="admin-orders__loading-dot" aria-hidden="true"></span>
+      <span class="admin-orders__loading-text">Retrieving the command folio from the vault…</span>
+    </div>
+  } @else if (error()) {
+    <div class="admin-orders__error-panel" role="alert">
+      <p class="admin-orders__error-title">Vault link interrupted</p>
+      <p class="admin-orders__err">{{ error() }}</p>
+      <p class="admin-orders__hint">
+        From the <code>backend</code> folder run <code>mvn spring-boot:run</code> (API on port 8080). The dev server proxies
+        <code>/api</code> to <code>127.0.0.1:8080</code>.
+      </p>
+      <button type="button" class="admin-orders__retry ticket-stub" (click)="load()">Retry connection</button>
+    </div>
+  } @else if (!orders().length) {
+    <div class="admin-orders__empty-panel">
+      <p class="admin-orders__empty-title">Queue is clear</p>
+      <p class="admin-orders__empty">No customer orders yet. Checkout from the storefront will appear here.</p>
+    </div>
+  } @else {
+    <div class="admin-orders__table-panel film-grain">
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Customer</th>
+              <th>Lines</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th class="admin-table__right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (o of orders(); track o.id) {
+              <tr>
+                <td class="admin-table__mono">{{ o.orderNumber }}</td>
+                <td>
+                  <div class="admin-orders__cust">
+                    <span class="admin-table__strong">{{ o.customerName }}</span>
+                    @if (o.customerPhone) {
+                      <span class="admin-orders__phone">{{ o.customerPhone }}</span>
+                    }
+                    @if (o.customerPhoneSecondary) {
+                      <span class="admin-orders__phone">{{ o.customerPhoneSecondary }}</span>
+                    }
+                    <span class="admin-orders__email">{{ o.customerEmail }}</span>
+                    @if (o.fulfillment) {
+                      <span class="admin-orders__fulfill">{{ o.fulfillment }}</span>
+                    }
+                  </div>
+                </td>
+                <td class="admin-table__serif admin-orders__lines">{{ lineSummary(o) }}</td>
+                <td class="admin-table__strong">{{ formatCurrency(o.totalAmount) }}</td>
+                <td>
+                  <span [class]="statusClass(o.status)">{{ formatStatus(o.status) }}</span>
+                </td>
+                <td class="admin-table__muted admin-orders__date">{{ o.createdAt | date: 'medium' }}</td>
+                <td class="admin-table__right">
+                  @if (o.awaitingConfirmation) {
+                    <div class="admin-orders__actions">
+                      <button
+                        type="button"
+                        class="admin-orders__accept"
+                        [disabled]="actionId() === o.id"
+                        (click)="acceptCommand(o)"
+                      >
+                        @if (actionId() === o.id) {
+                          Working…
+                        } @else {
+                          Accept command
+                        }
+                      </button>
+                      <button
+                        type="button"
+                        class="admin-orders__reject"
+                        [disabled]="actionId() === o.id"
+                        (click)="rejectCommand(o)"
+                      >
+                        Reject
+                      </button>
+                    </div>
+                  } @else if (canDownloadCommandRecord(o.status)) {
+                    <button
+                      type="button"
+                      class="admin-orders__download ticket-stub"
+                      [disabled]="downloadId() === o.id"
+                      (click)="downloadCommandRecord(o)"
+                    >
+                      @if (downloadId() === o.id) {
+                        Preparing…
+                      } @else {
+                        Download record
+                      }
+                    </button>
+                  } @else {
+                    <span class="admin-orders__dash">—</span>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  }
+</div>
