@@ -30,23 +30,38 @@
         <div class="pd-gallery">
           <div class="pd-gallery__stage">
             <span class="pd-est" aria-hidden="true">Est. {{ yearEst(p.createdAt) }}</span>
-            <div class="pd-gallery__img-shell vintage-overlay film-grain">
-              @if (mainImageUrl()) {
-                <img
-                  #mainImg
-                  class="pd-gallery__img"
-                  [src]="mainImageUrl()"
-                  [alt]="p.name"
-                  width="900"
-                  height="900"
-                  fetchpriority="high"
-                  loading="eager"
-                  decoding="async"
-                />
-              } @else {
-                <div class="pd-gallery__placeholder">No image on file</div>
-              }
-            </div>
+<div class="pd-gallery__img-shell vintage-overlay film-grain" (click)="openLightbox()">
+  @if (mainImageUrl()) {
+    <img
+      #mainImg
+      class="pd-gallery__img"
+      [src]="mainImageUrl()"
+      [alt]="p.name"
+      width="900"
+      height="900"
+      fetchpriority="high"
+      loading="eager"
+      decoding="async"
+    />
+  } @else {
+    <div class="pd-gallery__placeholder">No image on file</div>
+  }
+  <span class="pd-gallery__zoom-hint" aria-hidden="true">⊕</span>
+</div>
+
+@if (lightboxOpen()) {
+  <div class="pd-lightbox" (click)="closeLightbox()" role="dialog" aria-modal="true" aria-label="Image agrandie">
+    <button class="pd-lightbox__close" (click)="closeLightbox()" aria-label="Fermer">✕</button>
+    <div class="pd-lightbox__stage" (click)="$event.stopPropagation()">
+      <img
+        #lightboxImg
+        class="pd-lightbox__img"
+        [src]="mainImageUrl()"
+        [alt]="p.name"
+      />
+    </div>
+  </div>
+}
           </div>
 
           @if (gallery().length > 1) {

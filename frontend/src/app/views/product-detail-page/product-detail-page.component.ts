@@ -37,7 +37,10 @@ export class ProductDetailPageComponent {
   private readonly injector = inject(Injector);
 
   /** Main hero image — animated when the archive colorway changes. */
+  /** Main hero image — animated when the archive colorway changes. */
   private readonly mainImgEl = viewChild<ElementRef<HTMLImageElement>>('mainImg');
+  /** Shell used for zoom tracking on hover. */
+  private readonly imgShellEl = viewChild<ElementRef<HTMLElement>>('imgShell');
 
   readonly product = signal<CatalogProduct | null>(null);
   readonly loading = signal(true);
@@ -48,12 +51,15 @@ export class ProductDetailPageComponent {
   readonly selectedSize = signal<string | null>(null);
   readonly addAck = signal(false);
   /** Mobile: show fixed buy bar when the main CTA scrolls out of view (max-width: 959px). */
-  readonly stickyBuyVisible = signal(false);
-
-  private readonly buyCtaRef = viewChild<ElementRef<HTMLElement>>('buyCtaAnchor');
-  private stickyBuyObserver: IntersectionObserver | null = null;
+readonly stickyBuyVisible = signal(false);
+readonly lightboxOpen = signal(false);
+private readonly buyCtaRef = viewChild<ElementRef<HTMLElement>>('buyCtaAnchor');
+private readonly lightboxImgEl = viewChild<ElementRef<HTMLImageElement>>('lightboxImg');
+private readonly boundLightboxKey = (e: KeyboardEvent) => { if (e.key === 'Escape') this.closeLightbox(); };  private stickyBuyObserver: IntersectionObserver | null = null;
   private stickyBuyMq: MediaQueryList | null = null;
   private stickyBuyMqListener: (() => void) | null = null;
+  private readonly boundOnImageMove = (e: MouseEvent) => this.onImageMove(e);
+
 
   readonly gallery = computed(() => {
     const p = this.product();
@@ -160,13 +166,13 @@ export class ProductDetailPageComponent {
 
   constructor() {
     const destroyRef = inject(DestroyRef);
-    destroyRef.onDestroy(() => {
-      const el = this.mainImgEl()?.nativeElement;
-      if (el) {
-        gsap.killTweensOf(el);
-      }
-      this.teardownStickyBuyBar();
-    });
+destroyRef.onDestroy(() => {
+  const el = this.mainImgEl()?.nativeElement;
+  if (el) gsap.killTweensOf(el);
+  this._teardownLightbox();
+  this.teardownStickyBuyBar();
+});
+
 
     this.route.paramMap
       .pipe(
@@ -275,13 +281,13 @@ export class ProductDetailPageComponent {
     this.selectedColor.set(firstColor);
     const sizes = firstColor
       ? [
-          ...new Set(
-            variants
-              .filter((x) => (x.color ?? '').trim() === firstColor)
-              .map((x) => (x.size ?? '').trim())
-              .filter(Boolean),
-          ),
-        ]
+        ...new Set(
+          variants
+            .filter((x) => (x.color ?? '').trim() === firstColor)
+            .map((x) => (x.size ?? '').trim())
+            .filter(Boolean),
+        ),
+      ]
       : [];
     this.selectedSize.set(sizes[0] ?? null);
   }
@@ -451,4 +457,106 @@ export class ProductDetailPageComponent {
     if (/(brown|chocolate|coffee)/.test(c)) return 'brown';
     return 'brown';
   }
+
+
+
+  /** Bound reference kept for proper removeEventListener cleanup. */
+
+onImageEnter(): void {
+  if (this.prefersReducedMotion()) return;
+  const shell = this.imgShellEl()?.nativeElement;
+  if (shell) shell.addEventListener('mousemove', this.boundOnImageMove);
+  const img = this.mainImgEl()?.nativeElement;
+  if (!img) return;
+  gsap.killTweensOf(img);
+  gsap.to(img, { scale: 1.07, duration: 0.55, ease: 'power2.out' });
+}
+
+onImageLeave(): void {
+  if (this.prefersReducedMotion()) return;
+  const shell = this.imgShellEl()?.nativeElement;
+  if (shell) shell.removeEventListener('mousemove', this.boundOnImageMove);
+  const img = this.mainImgEl()?.nativeElement;
+  if (!img) return;
+  gsap.killTweensOf(img);
+  gsap.to(img, {
+    scale: 1,
+    x: 0,
+    y: 0,
+    duration: 0.55,
+    ease: 'power3.out',
+    clearProps: 'transform',
+  });
+}
+
+private onImageMove(e: MouseEvent): void {
+  if (this.prefersReducedMotion()) return;
+  const shell = this.imgShellEl()?.nativeElement;
+  const img  = this.mainImgEl()?.nativeElement;
+  if (!shell || !img) return;
+
+  const { left, top, width, height } = shell.getBoundingClientRect();
+  // Normalized -0.5 → +0.5 relative to shell center
+  const nx = (e.clientX - left) / width  - 0.5;
+  const ny = (e.clientY - top)  / height - 0.5;
+
+  // Max pan in px — image stays inside shell at scale 1.07
+  const maxX = width  * 0.04;
+  const maxY = height * 0.04;
+
+  gsap.to(img, {
+    x: nx * maxX * 2,
+    y: ny * maxY * 2,
+    duration: 0.6,
+    ease: 'power1.out',
+    overwrite: 'auto',
+  });
+}
+
+
+
+
+
+
+// ── Lightbox ──────────────────────────────────────────────────────────────
+
+openLightbox(): void {
+  this.lightboxOpen.set(true);
+  document.addEventListener('keydown', this.boundLightboxKey);
+  document.body.style.overflow = 'hidden';
+
+  afterNextRender(
+    () => {
+      const img = this.lightboxImgEl()?.nativeElement;
+      if (!img) return;
+      gsap.fromTo(
+        img,
+        { opacity: 0, scale: 0.88 },
+        { opacity: 1, scale: 1, duration: 0.42, ease: 'power3.out' },
+      );
+    },
+    { injector: this.injector },
+  );
+}
+
+closeLightbox(): void {
+  const img = this.lightboxImgEl()?.nativeElement;
+  if (!img) {
+    this._teardownLightbox();
+    return;
+  }
+  gsap.to(img, {
+    opacity: 0,
+    scale: 0.88,
+    duration: 0.28,
+    ease: 'power2.in',
+    onComplete: () => this._teardownLightbox(),
+  });
+}
+
+private _teardownLightbox(): void {
+  this.lightboxOpen.set(false);
+  document.removeEventListener('keydown', this.boundLightboxKey);
+  document.body.style.overflow = '';
+}
 }
