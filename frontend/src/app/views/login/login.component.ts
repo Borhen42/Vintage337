@@ -1,7 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import Swal from 'sweetalert2';
+import { finalize } from 'rxjs';
 import { AuthService } from '../../core/auth/auth.service';
+import { emailFieldValidators } from '../../core/validation/email';
 
 @Component({
   selector: 'app-login',
@@ -17,26 +20,32 @@ export class LoginComponent {
   readonly route = inject(ActivatedRoute);
 
   readonly form = this.fb.nonNullable.group({
-    email: ['', [Validators.required, Validators.email]],
+    email: ['', emailFieldValidators],
     password: ['', [Validators.required, Validators.minLength(1)]],
   });
 
-  errorMessage = '';
   submitted = false;
   loading = false;
+  /** When true, password is shown as plain text. */
+  passwordVisible = false;
+
+  togglePasswordVisibility(): void {
+    this.passwordVisible = !this.passwordVisible;
+  }
 
   submit(): void {
     this.submitted = true;
-    this.errorMessage = '';
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
     const { email, password } = this.form.getRawValue();
     this.loading = true;
-    this.auth.login(email, password).subscribe({
+    this.auth
+      .login(email, password)
+      .pipe(finalize(() => (this.loading = false)))
+      .subscribe({
       next: () => {
-        this.loading = false;
         const returnUrl = this.route.snapshot.queryParams['returnUrl'] as string | undefined;
         const safeReturn =
           returnUrl && returnUrl.startsWith('/') && !returnUrl.startsWith('//') ? returnUrl : undefined;
@@ -55,9 +64,21 @@ export class LoginComponent {
         }
       },
       error: (err: Error) => {
-        this.loading = false;
-        this.errorMessage = err.message || 'Invalid email or password.';
+        const text = err.message || 'Invalid email or password.';
+        const wrongCreds =
+          /invalid email or password/i.test(text) || /invalid credentials/i.test(text);
+        void Swal.fire({
+          icon: 'error',
+          title: wrongCreds ? 'Invalid email or password' : "Couldn't sign you in",
+          text: wrongCreds
+            ? 'Please check your email and password, then try again.'
+            : text,
+          confirmButtonText: 'Try again',
+          confirmButtonColor: '#5c3d2e',
+          focusConfirm: true,
+        });
       },
     });
   }
 }
+

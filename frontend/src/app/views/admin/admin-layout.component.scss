@@ -251,10 +251,36 @@
   font-family: var(--font-body);
   font-size: 0.9375rem;
   color: #3d2314;
+  cursor: pointer;
+  animation: admin-attention-banner-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 
-  p {
-    margin: 0;
+  &:focus-visible {
+    outline: 2px solid var(--secondary);
+    outline-offset: 2px;
   }
+}
+
+@keyframes admin-attention-banner-in {
+  from {
+    opacity: 0;
+    transform: translateY(-0.65rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-pending-banner__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: min(100%, 22rem);
+}
+
+.admin-pending-banner__line {
+  margin: 0;
+  line-height: 1.45;
 }
 
 .admin-pending-banner__actions {
@@ -273,6 +299,22 @@
   font-size: 0.8125rem;
   font-weight: 700;
   cursor: pointer;
+}
+
+.admin-pending-banner__secondary {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgba(61, 35, 20, 0.35);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #3d2314;
+  cursor: pointer;
+
+  &:hover {
+    background: color-mix(in srgb, var(--surface-container-high) 70%, var(--surface));
+  }
 }
 
 .admin-pending-banner__dismiss {
@@ -317,4 +359,194 @@
 .admin-content {
   padding: 5rem 2.5rem 2.5rem;
   min-height: 100vh;
+}
+
+.admin-notifications-panel {
+  position: fixed;
+  top: 5.25rem;
+  right: 2.5rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: min(22rem, calc(100vw - 16rem - 2rem));
+  max-height: min(28rem, calc(100vh - 6rem));
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  border: 1px solid rgba(61, 35, 20, 0.12);
+  box-shadow:
+    0 4px 24px rgba(29, 28, 22, 0.12),
+    0 0 0 1px rgba(61, 35, 20, 0.06);
+  font-family: var(--font-body);
+}
+
+.admin-notifications-panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.875rem 1rem;
+  border-bottom: 1px solid rgba(61, 35, 20, 0.1);
+  background: var(--surface-container-low);
+}
+
+.admin-notifications-panel__title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: #3d2314;
+  letter-spacing: -0.02em;
+}
+
+.admin-notifications-panel__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: rgba(61, 35, 20, 0.55);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(61, 35, 20, 0.08);
+    color: var(--secondary);
+  }
+}
+
+.admin-notifications-panel__state {
+  margin: 0;
+  padding: 1rem 1rem 0.5rem;
+  font-size: 0.875rem;
+  color: rgba(61, 35, 20, 0.72);
+
+  &--err {
+    color: #8b2500;
+  }
+}
+
+.admin-notifications-panel__retry {
+  margin: 0 1rem 0.75rem;
+  padding: 0.4rem 0.75rem;
+  align-self: flex-start;
+  border: 1px solid rgba(61, 35, 20, 0.25);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #3d2314;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--secondary);
+    color: var(--secondary);
+  }
+}
+
+.admin-notifications-panel__section-label {
+  margin: 0.75rem 1rem 0.35rem;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(61, 35, 20, 0.5);
+}
+
+.admin-notifications-panel__list {
+  margin: 0;
+  padding: 0 0.5rem;
+  list-style: none;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
+}
+
+.admin-notifications-panel__list li {
+  margin: 0;
+}
+
+.admin-notifications-panel__row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto auto;
+  gap: 0.15rem 0.5rem;
+  width: 100%;
+  margin-bottom: 0.25rem;
+  padding: 0.65rem 0.5rem;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:hover {
+    background: rgba(153, 71, 3, 0.08);
+  }
+}
+
+.admin-notifications-panel__row-kicker {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--secondary);
+}
+
+.admin-notifications-panel__row-title {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #3d2314;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-notifications-panel__row-meta {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  align-self: center;
+  max-width: 6.5rem;
+  font-size: 0.75rem;
+  color: rgba(61, 35, 20, 0.55);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-notifications-panel__row-date {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  font-size: 0.6875rem;
+  color: rgba(61, 35, 20, 0.45);
+}
+
+.admin-notifications-panel__foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid rgba(61, 35, 20, 0.1);
+  background: var(--surface-container-low);
+}
+
+.admin-notifications-panel__link {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--secondary);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 }

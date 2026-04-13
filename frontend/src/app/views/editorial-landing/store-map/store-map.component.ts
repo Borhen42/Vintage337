@@ -4,10 +4,12 @@ import {
   ElementRef,
   OnDestroy,
   ViewChild,
+  inject,
 } from '@angular/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { CircleMarker, Map as LeafletMap } from 'leaflet';
+import { Subscription } from 'rxjs';
 
-/** Le Palmarium, Tunis — OpenStreetMap reference point */
 const STORE_LAT = 36.7987764;
 const STORE_LNG = 10.1811531;
 const STORE_ZOOM = 16;
@@ -15,19 +17,21 @@ const STORE_ZOOM = 16;
 @Component({
   selector: 'app-store-map',
   standalone: true,
+  imports: [TranslatePipe],
   templateUrl: './store-map.component.html',
   styleUrl: './store-map.component.scss',
 })
 export class StoreMapComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapHost', { static: false }) mapHost!: ElementRef<HTMLElement>;
 
-  /** Exposed for template link to openstreetmap.org */
   readonly lat = STORE_LAT;
   readonly lng = STORE_LNG;
 
+  private readonly translate = inject(TranslateService);
   private map?: LeafletMap;
   private marker?: CircleMarker;
   private resizeObserver?: ResizeObserver;
+  private langSub?: Subscription;
 
   async ngAfterViewInit(): Promise<void> {
     await new Promise<void>((resolve) => queueMicrotask(() => resolve()));
@@ -57,9 +61,8 @@ export class StoreMapComponent implements AfterViewInit, OnDestroy {
       fillOpacity: 0.9,
     }).addTo(this.map);
 
-    this.marker.bindPopup(
-      '<strong>Vintage 337</strong><br>Boutique n° 156 · Centre commercial le Palmaruim, Tunis',
-    );
+    this.updateMarkerPopup();
+    this.langSub = this.translate.onLangChange.subscribe(() => this.updateMarkerPopup());
 
     const invalidate = () => this.map?.invalidateSize();
     requestAnimationFrame(() => {
@@ -74,11 +77,17 @@ export class StoreMapComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.langSub?.unsubscribe();
+    this.langSub = undefined;
     this.resizeObserver?.disconnect();
     this.resizeObserver = undefined;
     this.marker?.remove();
     this.map?.remove();
     this.map = undefined;
     this.marker = undefined;
+  }
+
+  private updateMarkerPopup(): void {
+    this.marker?.bindPopup(`<strong>Vintage 337</strong><br>${this.translate.instant('landing.store.popup')}`);
   }
 }

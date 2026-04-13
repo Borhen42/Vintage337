@@ -118,11 +118,28 @@ export class AdminProductFormComponent implements OnDestroy {
 
   addVariantRow(): void {
     const sizes = sizesForCategory(this.form.controls.category.getRawValue());
+    const fallbackSize = sizes[0] ?? '';
+    let size = fallbackSize;
+    let color = '';
+    let stock = 0;
+
+    if (this.variants.length > 0) {
+      const last = this.variants.at(this.variants.length - 1).getRawValue() as {
+        size: string;
+        color: string;
+        stock: number;
+      };
+      size = sizes.includes(last.size) ? last.size : fallbackSize;
+      color = last.color ?? '';
+      const n = Number(last.stock);
+      stock = Number.isFinite(n) ? Math.max(0, Math.floor(n)) : 0;
+    }
+
     this.variants.push(
       this.fb.nonNullable.group({
-        size: [sizes[0] ?? '', Validators.required],
-        color: ['', [Validators.required, Validators.maxLength(64)]],
-        stock: [0, [Validators.required, Validators.min(0)]],
+        size: [size, Validators.required],
+        color: [color, [Validators.required, Validators.maxLength(64)]],
+        stock: [stock, [Validators.required, Validators.min(0)]],
       }),
     );
   }

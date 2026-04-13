@@ -21,6 +21,7 @@ export class AdminOrdersComponent implements OnInit {
   readonly error = signal('');
   readonly actionId = signal<number | null>(null);
   readonly downloadId = signal<number | null>(null);
+  readonly cancelId = signal<number | null>(null);
 
   ngOnInit(): void {
     this.load();
@@ -85,6 +86,39 @@ export class AdminOrdersComponent implements OnInit {
   canDownloadCommandRecord(status: string): boolean {
     const s = status.toUpperCase();
     return s !== 'PENDING' && s !== 'CANCELLED';
+  }
+
+  canCancelAfterAccept(status: string): boolean {
+    const s = status.toUpperCase();
+    return (
+      s === 'CONFIRMED' || s === 'PROCESSING' || s === 'SHIPPING' || s === 'COMPLETED'
+    );
+  }
+
+  cancelCommand(o: AdminOrder): void {
+    if (!this.canCancelAfterAccept(o.status)) return;
+    if (
+      !window.confirm(
+        'Cancel this command? Vault stock for every line will be restored (pieces return to the catalogue). The sealed command record will be removed.',
+      )
+    ) {
+      return;
+    }
+    this.cancelId.set(o.id);
+    this.ordersApi.cancel(o.id).subscribe({
+      next: (updated) => {
+        this.orders.update((list) => list.map((x) => (x.id === updated.id ? updated : x)));
+        this.cancelId.set(null);
+      },
+      error: (err: HttpErrorResponse) => {
+        this.cancelId.set(null);
+        const msg =
+          err.error && typeof err.error === 'object' && err.error !== null && 'message' in err.error
+            ? String((err.error as { message: string }).message)
+            : 'Could not cancel command.';
+        alert(msg);
+      },
+    });
   }
 
   private savePdfFromResponse(resp: HttpResponse<Blob>, fallbackFilename: string): void {

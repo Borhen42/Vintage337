@@ -12,6 +12,12 @@
   max-width: 72rem;
   margin: 0 auto;
   padding: 1.25rem clamp(1rem, 4vw, 2.5rem) 3rem;
+
+  @media (max-width: 959px) {
+    &.pd-main--sticky-pad {
+      padding-bottom: 6.5rem;
+    }
+  }
 }
 
 .pd-state {
@@ -126,6 +132,7 @@
   aspect-ratio: 1;
   object-fit: cover;
   vertical-align: middle;
+  transform-origin: center center;
 }
 
 .pd-gallery__placeholder {
@@ -587,6 +594,103 @@
   cursor: pointer;
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.pd-sticky-buy {
+  display: none;
+
+  @media (max-width: 959px) {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 90;
+    padding: 0.65rem clamp(1rem, 4vw, 1.5rem) calc(0.65rem + env(safe-area-inset-bottom, 0px));
+    background: color-mix(in srgb, var(--surface) 92%, var(--surface-container-low));
+    border-top: 1px solid color-mix(in srgb, var(--outline-variant) 55%, transparent);
+    box-shadow: 0 -8px 28px rgba(29, 28, 22, 0.1);
+    backdrop-filter: blur(10px);
+  }
+
+  @media (min-width: 960px) {
+    display: none !important;
+  }
+}
+
+.pd-sticky-buy__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.pd-sticky-buy__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.pd-sticky-buy__price {
+  font-family: var(--font-headline);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--primary-container);
+  letter-spacing: -0.02em;
+}
+
+.pd-sticky-buy__variant {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-surface-variant);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pd-sticky-buy__cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 5.5rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--on-primary);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--primary-container) 92%, #000),
+    var(--primary-container)
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 6px 18px rgba(29, 28, 22, 0.12);
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  &:not(:disabled):active {
+    transform: scale(0.98);
+  }
+}
+
+.pd-sticky-buy__cta-icon {
+  display: flex;
+  opacity: 0.9;
 }
 
 .visually-hidden {

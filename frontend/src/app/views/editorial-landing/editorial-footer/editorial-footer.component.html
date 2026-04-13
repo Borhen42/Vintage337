@@ -6,7 +6,7 @@
 
     <div id="contact" class="heritage-foot__contact">
       <p class="heritage-foot__contact-line">
-        Centre commercial le Palmaruim Tunis, boutique n° 156, Tunis, Tunisia, 1001
+        {{ 'landing.footer.address' | translate }}
       </p>
       <p class="heritage-foot__contact-line">
         <a href="tel:+21620374400">20 374 400</a>
@@ -15,12 +15,12 @@
       </p>
     </div>
 
-    <nav class="heritage-foot__nav" aria-label="Liens pied de page">
-      <a href="#heritage-series">Join the crew</a>
-      <a href="#store-locator">Store locator</a>
-      <a routerLink="/reclamation">Reclamation</a>
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
+    <nav class="heritage-foot__nav" [attr.aria-label]="'landing.footer.navLabel' | translate">
+      <a href="#heritage-series">{{ 'landing.footer.joinCrew' | translate }}</a>
+      <a href="#store-locator">{{ 'landing.footer.storeLocator' | translate }}</a>
+      <a routerLink="/reclamation">{{ 'landing.footer.reclamation' | translate }}</a>
+      <a href="#">{{ 'landing.footer.privacy' | translate }}</a>
+      <a href="#">{{ 'landing.footer.terms' | translate }}</a>
     </nav>
 
     <div class="heritage-foot__icons" aria-hidden="true">
@@ -38,6 +38,6 @@
       </svg>
     </div>
 
-    <p class="heritage-foot__legal">Est. 1999 heritage archive · All rights reserved</p>
+    <p class="heritage-foot__legal">{{ 'landing.footer.legal' | translate }}</p>
   </div>
 </footer>

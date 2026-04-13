@@ -12,6 +12,8 @@ public record AdminOrderResponse(
     String customerPhone,
     String customerPhoneSecondary,
     String fulfillment,
+    String shippingAddress,
+    String postalCode,
     String status,
     BigDecimal totalAmount,
     LocalDateTime createdAt,

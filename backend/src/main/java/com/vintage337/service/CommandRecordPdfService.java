@@ -61,6 +61,18 @@ public class CommandRecordPdfService {
                         : order.getCustomerEmail()))
             .replace("{{PRIMARY_COMMS}}", esc(phoneOrDash(order.getCustomerPhone())))
             .replace("{{SECONDARY_COMMS}}", esc(phoneOrDash(order.getCustomerPhoneSecondary())))
+            .replace(
+                "{{SHIPPING_ADDRESS}}",
+                esc(
+                    order.getShippingAddress() == null || order.getShippingAddress().isBlank()
+                        ? "—"
+                        : order.getShippingAddress()))
+            .replace(
+                "{{POSTAL_CODE}}",
+                esc(
+                    order.getPostalCode() == null || order.getPostalCode().isBlank()
+                        ? "—"
+                        : order.getPostalCode()))
             .replace("{{ITEMS_BLOCK}}", buildItemsBlock(order))
             .replace(
                 "{{AUTH_COPY}}",

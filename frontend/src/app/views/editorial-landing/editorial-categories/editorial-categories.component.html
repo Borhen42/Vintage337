@@ -1,20 +1,20 @@
 <section class="heritage-bento" id="heritage-series" aria-labelledby="heritage-bento-title">
   <div class="heritage-bento__head reveal-block">
     <div>
-      <h2 id="heritage-bento-title" class="heritage-bento__title">The Heritage Series</h2>
+      <h2 id="heritage-bento-title" class="heritage-bento__title">{{ 'landing.categories.title' | translate }}</h2>
       @if (livePair(); as pair) {
         <p class="heritage-bento__subtitle">
-          Latest vault intake · Est. {{ vaultYear(pair.featured) }}
+          {{ 'landing.categories.latestVaultIntake' | translate }} · Est. {{ vaultYear(pair.featured) }}
         </p>
       } @else {
-        <p class="heritage-bento__subtitle">Batch No. 0337-A · Summer release</p>
+        <p class="heritage-bento__subtitle">{{ 'landing.categories.batchSubtitle' | translate }}</p>
       }
     </div>
-    <a routerLink="/catalogue" class="heritage-bento__view-all">View all</a>
+    <a routerLink="/catalogue" class="heritage-bento__view-all">{{ 'landing.categories.viewAll' | translate }}</a>
   </div>
 
   @if (!catalog.listHydrated()) {
-    <p class="heritage-bento__pending reveal-block" role="status">Syncing pieces from the vault…</p>
+    <p class="heritage-bento__pending reveal-block" role="status">{{ loadingText() }}</p>
   } @else if (livePair(); as pair) {
     <div class="heritage-bento__grid">
       <article
@@ -38,7 +38,7 @@
           }
           <div class="heritage-bento__grad" aria-hidden="true"></div>
           <div class="heritage-bento__tags">
-            <span class="heritage-bento__tag heritage-bento__tag--dark">Heritage selection</span>
+            <span class="heritage-bento__tag heritage-bento__tag--dark">{{ 'landing.categories.heritageSelection' | translate }}</span>
             <span class="heritage-bento__tag heritage-bento__tag--brass" aria-hidden="true">★</span>
           </div>
           <div class="heritage-bento__feature-caption">
@@ -54,7 +54,6 @@
           [routerLink]="['/product', pair.side.id]"
           tabindex="0"
         >
-          
           <div class="heritage-card__media">
             @if (primaryImage(pair.side)) {
               <img
@@ -72,7 +71,7 @@
           <h4 class="heritage-card__name">{{ pair.side.name }}</h4>
           <p class="heritage-card__spec">{{ pair.side.category }}</p>
           <p class="heritage-card__price">{{ formatPrice(pair.side.price) }}</p>
-          <div class="heritage-card__sizes" role="group" [attr.aria-label]="'Sizes for ' + pair.side.name">
+          <div class="heritage-card__sizes" role="group" [attr.aria-label]="('landing.categories.sizesFor' | translate) + ' ' + pair.side.name">
             @for (sz of displaySizes(pair.side); track sz) {
               <span
                 class="heritage-card__size ticket-stub"
@@ -85,15 +84,15 @@
 
         <div class="heritage-club film-grain reveal-block" id="about-strip">
           <div class="heritage-club__content">
-            <h3 class="heritage-club__title">The archive club</h3>
+            <h3 class="heritage-club__title">{{ 'landing.categories.clubTitle' | translate }}</h3>
             <p class="heritage-club__text">
-              Accès anticipé aux drops limités et pièces deadstock réservées aux membres.
+              {{ 'landing.categories.clubText' | translate }}
             </p>
-            <label class="visually-hidden" for="club-email">Email</label>
-            <input id="club-email" class="heritage-club__input" type="email" placeholder="Votre email" autocomplete="email" />
-            <button type="button" class="heritage-club__submit">Join the crew</button>
+            <label class="visually-hidden" for="club-email">{{ 'landing.categories.emailLabel' | translate }}</label>
+            <input id="club-email" class="heritage-club__input" type="email" [placeholder]="'landing.categories.emailPlaceholder' | translate" autocomplete="email" />
+            <button type="button" class="heritage-club__submit">{{ 'landing.categories.joinCrew' | translate }}</button>
           </div>
-          <span class="heritage-club__watermark" aria-hidden="true">Club</span>
+          <span class="heritage-club__watermark" aria-hidden="true">{{ 'landing.categories.clubWatermark' | translate }}</span>
         </div>
       </div>
     </div>
@@ -106,35 +105,34 @@
             src="assets/imgs/Model-1/product-1.png"
             width="1200"
             height="1600"
-            alt="Lookbook — archive wind-breaker"
+            [attr.alt]="'landing.categories.fallbackFeatureAlt' | translate"
           />
           <div class="heritage-bento__grad" aria-hidden="true"></div>
           <div class="heritage-bento__tags">
-            <span class="heritage-bento__tag heritage-bento__tag--dark">Heritage selection</span>
+            <span class="heritage-bento__tag heritage-bento__tag--dark">{{ 'landing.categories.heritageSelection' | translate }}</span>
             <span class="heritage-bento__tag heritage-bento__tag--brass" aria-hidden="true">★</span>
           </div>
           <div class="heritage-bento__feature-caption">
-            <h3 class="heritage-bento__feature-name">‘Archive’ wind-breaker</h3>
-            <p class="heritage-bento__feature-meta">Lightweight nylon · Heritage cream</p>
+            <h3 class="heritage-bento__feature-name">{{ 'landing.categories.fallbackFeatureName' | translate }}</h3>
+            <p class="heritage-bento__feature-meta">{{ 'landing.categories.fallbackFeatureMeta' | translate }}</p>
           </div>
         </div>
       </article>
 
       <div class="heritage-bento__side">
         <article class="heritage-card heritage-card--product reveal-block">
-          
           <div class="heritage-card__media">
             <img
               src="assets/imgs/Model-1/product-2.png"
               width="900"
               height="1200"
-              alt="Industrial field jacket"
+              [attr.alt]="'landing.categories.fallbackSideAlt' | translate"
             />
           </div>
-          <h4 class="heritage-card__name">Modern industrial shell</h4>
-          <p class="heritage-card__spec">Deep forest archive</p>
+          <h4 class="heritage-card__name">{{ 'landing.categories.fallbackSideName' | translate }}</h4>
+          <p class="heritage-card__spec">{{ 'landing.categories.fallbackSideSpec' | translate }}</p>
           <p class="heritage-card__price">{{ formatPrice(128) }}</p>
-          <div class="heritage-card__sizes" role="group" aria-label="Tailles">
+          <div class="heritage-card__sizes" role="group" [attr.aria-label]="'landing.categories.sizesLabel' | translate">
             <button type="button" class="heritage-card__size ticket-stub">S</button>
             <button type="button" class="heritage-card__size ticket-stub heritage-card__size--active">M</button>
             <button type="button" class="heritage-card__size ticket-stub">L</button>
@@ -143,15 +141,15 @@
 
         <div class="heritage-club film-grain reveal-block" id="about-strip">
           <div class="heritage-club__content">
-            <h3 class="heritage-club__title">The archive club</h3>
+            <h3 class="heritage-club__title">{{ 'landing.categories.clubTitle' | translate }}</h3>
             <p class="heritage-club__text">
-              Accès anticipé aux drops limités et pièces deadstock réservées aux membres.
+              {{ 'landing.categories.clubText' | translate }}
             </p>
-            <label class="visually-hidden" for="club-email-fallback">Email</label>
-            <input id="club-email-fallback" class="heritage-club__input" type="email" placeholder="Votre email" autocomplete="email" />
-            <button type="button" class="heritage-club__submit">Join the crew</button>
+            <label class="visually-hidden" for="club-email-fallback">{{ 'landing.categories.emailLabel' | translate }}</label>
+            <input id="club-email-fallback" class="heritage-club__input" type="email" [placeholder]="'landing.categories.emailPlaceholder' | translate" autocomplete="email" />
+            <button type="button" class="heritage-club__submit">{{ 'landing.categories.joinCrew' | translate }}</button>
           </div>
-          <span class="heritage-club__watermark" aria-hidden="true">Club</span>
+          <span class="heritage-club__watermark" aria-hidden="true">{{ 'landing.categories.clubWatermark' | translate }}</span>
         </div>
       </div>
     </div>

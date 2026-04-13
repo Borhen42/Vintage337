@@ -88,6 +88,64 @@ public class ProductStockService {
     product.setStock(stock - quantity);
   }
 
+  /**
+   * Restores units to variant row or aggregate stock (inverse of {@link #decrementForLine}). Used when an
+   * accepted command is cancelled.
+   */
+  public void incrementForLine(Product product, String variantSize, String variantColor, int quantity) {
+    if (quantity <= 0) {
+      return;
+    }
+    String size = normalizeVariant(variantSize);
+    String color = normalizeVariant(variantColor);
+    String json = product.getVariantsJson();
+    boolean hasVariants = json != null && !json.isBlank();
+
+    if (!hasVariants || size == null || color == null) {
+      int stock = product.getStock() == null ? 0 : product.getStock();
+      product.setStock(stock + quantity);
+      return;
+    }
+
+    try {
+      List<Map<String, Object>> rows =
+          objectMapper.readValue(json, new TypeReference<List<Map<String, Object>>>() {});
+      if (rows == null || rows.isEmpty()) {
+        incrementAggregateOnly(product, quantity);
+        return;
+      }
+      boolean matched = false;
+      for (Map<String, Object> row : rows) {
+        if (row == null) continue;
+        String rs = normalizeVariant(String.valueOf(row.get("size")));
+        String rc = normalizeVariant(String.valueOf(row.get("color")));
+        if (rs == null || rc == null) continue;
+        if (!rs.equalsIgnoreCase(size) || !rc.equalsIgnoreCase(color)) continue;
+        int st = parseStock(row.get("stock"));
+        row.put("stock", st + quantity);
+        matched = true;
+        break;
+      }
+      if (!matched) {
+        throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "No matching variant to restore for \"" + product.getName() + "\" (" + variantSize + " / " + variantColor + ").");
+      }
+      product.setVariantsJson(objectMapper.writeValueAsString(rows));
+      product.setStock(rows.stream().mapToInt(r -> parseStock(r.get("stock"))).sum());
+    } catch (ResponseStatusException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new ResponseStatusException(
+          HttpStatus.INTERNAL_SERVER_ERROR, "Could not restore variant inventory for \"" + product.getName() + "\".");
+    }
+  }
+
+  private void incrementAggregateOnly(Product product, int quantity) {
+    int stock = product.getStock() == null ? 0 : product.getStock();
+    product.setStock(stock + quantity);
+  }
+
   private static String normalizeVariant(String raw) {
     if (raw == null) return null;
     String t = raw.trim();

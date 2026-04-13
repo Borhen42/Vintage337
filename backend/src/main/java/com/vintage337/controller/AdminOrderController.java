@@ -64,4 +64,10 @@ public class AdminOrderController {
   public AdminOrderResponse reject(@PathVariable long id) {
     return orderService.rejectCommand(id);
   }
+
+  /** Cancel after accept (or any post-accept status): restores vault stock and removes the sealed record. */
+  @PostMapping("/{id}/cancel")
+  public AdminOrderResponse cancel(@PathVariable long id) {
+    return orderService.cancelCommand(id);
+  }
 }

@@ -1,8 +1,10 @@
 import { Component, signal } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-editorial-hero',
   standalone: true,
+  imports: [TranslatePipe],
   templateUrl: './editorial-hero.component.html',
   styleUrl: './editorial-hero.component.scss',
 })

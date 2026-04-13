@@ -1,0 +1,46 @@
+:host {
+  display: contents;
+}
+
+.lang-switch {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+  background: color-mix(in srgb, #ffffff 10%, transparent);
+  border-radius: var(--radius-lg);
+  padding: 0.2rem;
+}
+
+.lang-switch__btn {
+  padding: 0.2rem 0.45rem;
+  border: none;
+  border-radius: calc(var(--radius-lg) - 0.05rem);
+  background: transparent;
+  color: var(--surface);
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0.7;
+  transition:
+    opacity 0.18s ease,
+    background 0.18s ease,
+    color 0.18s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &--active {
+    opacity: 1;
+    background: color-mix(in srgb, #ffffff 18%, transparent);
+    color: var(--tertiary-fixed-dim);
+  }
+
+  &--ar {
+    font-family: var(--font-headline);
+    letter-spacing: 0;
+  }
+}

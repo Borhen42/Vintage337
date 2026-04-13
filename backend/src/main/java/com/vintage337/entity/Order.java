@@ -56,6 +56,12 @@ public class Order {
   @Column(name = "fulfillment", length = 32)
   private String fulfillment;
 
+  @Column(name = "shipping_address", length = 500)
+  private String shippingAddress;
+
+  @Column(name = "postal_code", length = 32)
+  private String postalCode;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 32)
   private OrderStatus status = OrderStatus.PENDING;

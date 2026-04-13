@@ -1,6 +1,17 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import {
+  afterNextRender,
+  Component,
+  computed,
+  DestroyRef,
+  ElementRef,
+  inject,
+  Injector,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import gsap from 'gsap';
 import { EMPTY, catchError, finalize, of, switchMap } from 'rxjs';
 import { EditorialNavbarComponent } from '../editorial-landing/editorial-navbar/editorial-navbar.component';
 import { ProductCatalogService } from '../../core/catalog/product-catalog.service';
@@ -23,6 +34,10 @@ export class ProductDetailPageComponent {
   private readonly catalog = inject(ProductCatalogService);
   readonly auth = inject(AuthService);
   private readonly cart = inject(CartService);
+  private readonly injector = inject(Injector);
+
+  /** Main hero image — animated when the archive colorway changes. */
+  private readonly mainImgEl = viewChild<ElementRef<HTMLImageElement>>('mainImg');
 
   readonly product = signal<CatalogProduct | null>(null);
   readonly loading = signal(true);
@@ -32,6 +47,13 @@ export class ProductDetailPageComponent {
   readonly selectedColor = signal<string | null>(null);
   readonly selectedSize = signal<string | null>(null);
   readonly addAck = signal(false);
+  /** Mobile: show fixed buy bar when the main CTA scrolls out of view (max-width: 959px). */
+  readonly stickyBuyVisible = signal(false);
+
+  private readonly buyCtaRef = viewChild<ElementRef<HTMLElement>>('buyCtaAnchor');
+  private stickyBuyObserver: IntersectionObserver | null = null;
+  private stickyBuyMq: MediaQueryList | null = null;
+  private stickyBuyMqListener: (() => void) | null = null;
 
   readonly gallery = computed(() => {
     const p = this.product();
@@ -123,7 +145,29 @@ export class ProductDetailPageComponent {
     return t > 0 && t <= 24;
   });
 
+  /** Short label for sticky bar (size / colorway when variants exist). */
+  readonly stickyVariantHint = computed(() => {
+    if (!this.uniqueColors().length) {
+      return '';
+    }
+    const s = this.selectedSize();
+    const c = this.selectedColor();
+    if (s && c) {
+      return `${s} · ${c}`;
+    }
+    return s ?? c ?? '';
+  });
+
   constructor() {
+    const destroyRef = inject(DestroyRef);
+    destroyRef.onDestroy(() => {
+      const el = this.mainImgEl()?.nativeElement;
+      if (el) {
+        gsap.killTweensOf(el);
+      }
+      this.teardownStickyBuyBar();
+    });
+
     this.route.paramMap
       .pipe(
         takeUntilDestroyed(),
@@ -131,11 +175,13 @@ export class ProductDetailPageComponent {
           const raw = pm.get('id');
           const id = raw ? Number.parseInt(raw, 10) : NaN;
           if (!Number.isFinite(id) || id < 1) {
+            this.teardownStickyBuyBar();
             this.loading.set(false);
             this.notFound.set(true);
             this.product.set(null);
             return EMPTY;
           }
+          this.teardownStickyBuyBar();
           this.loading.set(true);
           this.notFound.set(false);
           this.product.set(null);
@@ -151,21 +197,81 @@ export class ProductDetailPageComponent {
       )
       .subscribe((p) => {
         if (p === null) {
+          this.teardownStickyBuyBar();
           return;
         }
         this.notFound.set(false);
         this.product.set(p);
         this.applyVariantSelection(p);
+        afterNextRender(
+          () => {
+            const img = this.mainImgEl()?.nativeElement;
+            if (img) {
+              gsap.killTweensOf(img);
+              gsap.set(img, { opacity: 1, scale: 1 });
+            }
+          },
+          { injector: this.injector },
+        );
+        this.setupStickyBuyBar();
       });
   }
 
+  private setupStickyBuyBar(): void {
+    this.teardownStickyBuyBar();
+    if (typeof window === 'undefined' || typeof IntersectionObserver === 'undefined') {
+      return;
+    }
+    this.stickyBuyMq = window.matchMedia('(max-width: 959px)');
+    const attach = () => {
+      this.stickyBuyObserver?.disconnect();
+      this.stickyBuyObserver = null;
+      if (!this.stickyBuyMq?.matches) {
+        this.stickyBuyVisible.set(false);
+        return;
+      }
+      const el = this.buyCtaRef()?.nativeElement;
+      if (!el) {
+        return;
+      }
+      this.stickyBuyObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (!this.stickyBuyMq?.matches) {
+            this.stickyBuyVisible.set(false);
+            return;
+          }
+          this.stickyBuyVisible.set(!entry.isIntersecting);
+        },
+        { root: null, threshold: 0, rootMargin: '0px' },
+      );
+      this.stickyBuyObserver.observe(el);
+    };
+
+    afterNextRender(() => attach(), { injector: this.injector });
+
+    this.stickyBuyMqListener = () => attach();
+    this.stickyBuyMq.addEventListener('change', this.stickyBuyMqListener);
+  }
+
+  private teardownStickyBuyBar(): void {
+    this.stickyBuyObserver?.disconnect();
+    this.stickyBuyObserver = null;
+    if (this.stickyBuyMq && this.stickyBuyMqListener) {
+      this.stickyBuyMq.removeEventListener('change', this.stickyBuyMqListener);
+    }
+    this.stickyBuyMq = null;
+    this.stickyBuyMqListener = null;
+    this.stickyBuyVisible.set(false);
+  }
+
   private applyVariantSelection(p: CatalogProduct): void {
-    this.selectedImageIndex.set(0);
     const variants = p.variants ?? [];
     const colors = [...new Set(variants.map((x) => (x.color ?? '').trim()).filter(Boolean))].sort(
       (a, b) => a.localeCompare(b),
     );
     const firstColor = colors[0] ?? null;
+    const imageIdx = firstColor ? this.colorToGalleryIndex(firstColor) : 0;
+    this.selectedImageIndex.set(imageIdx);
     this.selectedColor.set(firstColor);
     const sizes = firstColor
       ? [
@@ -180,12 +286,22 @@ export class ProductDetailPageComponent {
     this.selectedSize.set(sizes[0] ?? null);
   }
 
-  selectImage(i: number): void {
+  /**
+   * Gallery slot for a colorway: first color → first image, etc. (typical lookbook order).
+   * Clamps when there are fewer photos than colors.
+   */
+  private colorToGalleryIndex(color: string): number {
     const g = this.gallery();
-    if (i >= 0 && i < g.length) this.selectedImageIndex.set(i);
+    if (!g.length) {
+      return 0;
+    }
+    const colors = this.uniqueColors();
+    const ci = colors.indexOf(color);
+    const safe = ci >= 0 ? ci : 0;
+    return Math.min(safe, g.length - 1);
   }
 
-  selectColor(color: string): void {
+  private applyColorSelection(color: string, imageIndex: number): void {
     this.selectedColor.set(color);
     const p = this.product();
     const sizes =
@@ -196,6 +312,83 @@ export class ProductDetailPageComponent {
     const uniq = [...new Set(sizes)];
     const cur = this.selectedSize();
     this.selectedSize.set(cur && uniq.includes(cur) ? cur : uniq[0] ?? null);
+    this.selectedImageIndex.set(imageIndex);
+  }
+
+  private prefersReducedMotion(): boolean {
+    return typeof matchMedia !== 'undefined' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
+
+  selectImage(i: number): void {
+    const g = this.gallery();
+    if (i >= 0 && i < g.length) this.selectedImageIndex.set(i);
+  }
+
+  selectColor(color: string): void {
+    const nextIdx = this.colorToGalleryIndex(color);
+    const g = this.gallery();
+    const nextUrl = g[nextIdx] ?? '';
+    const currentUrl = this.mainImageUrl();
+
+    if (color === this.selectedColor() && nextIdx === this.selectedImageIndex()) {
+      return;
+    }
+
+    if (this.prefersReducedMotion() || !nextUrl || nextUrl === currentUrl) {
+      this.applyColorSelection(color, nextIdx);
+      return;
+    }
+
+    const el = this.mainImgEl()?.nativeElement;
+    if (!el) {
+      this.applyColorSelection(color, nextIdx);
+      return;
+    }
+
+    gsap.killTweensOf(el);
+    gsap.to(el, {
+      opacity: 0,
+      scale: 0.96,
+      duration: 0.32,
+      ease: 'power2.in',
+      onComplete: () => {
+        this.applyColorSelection(color, nextIdx);
+        afterNextRender(
+          () => {
+            const img = this.mainImgEl()?.nativeElement;
+            if (!img) {
+              return;
+            }
+            gsap.killTweensOf(img);
+            const runEnter = () => {
+              gsap.fromTo(
+                img,
+                { opacity: 0, scale: 1.035 },
+                {
+                  opacity: 1,
+                  scale: 1,
+                  duration: 0.48,
+                  ease: 'power3.out',
+                  clearProps: 'transform',
+                },
+              );
+            };
+            if (img.complete && img.naturalWidth > 0) {
+              runEnter();
+            } else {
+              const done = () => {
+                img.removeEventListener('load', done);
+                img.removeEventListener('error', done);
+                runEnter();
+              };
+              img.addEventListener('load', done);
+              img.addEventListener('error', done);
+            }
+          },
+          { injector: this.injector },
+        );
+      },
+    });
   }
 
   selectSize(size: string): void {
@@ -215,9 +408,9 @@ export class ProductDetailPageComponent {
   }
 
   yearEst(iso: string): string {
-    if (!iso) return '1999';
+    if (!iso) return 'Now';
     const d = new Date(iso);
-    return Number.isNaN(d.getTime()) ? '1999' : String(d.getFullYear());
+    return Number.isNaN(d.getTime()) ? 'Now' : String(d.getFullYear());
   }
 
   addToArchive(): void {

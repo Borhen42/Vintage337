@@ -1,0 +1,29 @@
+<div class="lang-switch" role="group" [attr.aria-label]="'lang.choose' | translate">
+  <button
+    type="button"
+    class="lang-switch__btn"
+    [class.lang-switch__btn--active]="isActive('en')"
+    [attr.aria-pressed]="isActive('en')"
+    (click)="setLang('en')"
+  >
+    EN
+  </button>
+  <button
+    type="button"
+    class="lang-switch__btn"
+    [class.lang-switch__btn--active]="isActive('fr')"
+    [attr.aria-pressed]="isActive('fr')"
+    (click)="setLang('fr')"
+  >
+    FR
+  </button>
+  <button
+    type="button"
+    class="lang-switch__btn lang-switch__btn--ar"
+    [class.lang-switch__btn--active]="isActive('ar')"
+    [attr.aria-pressed]="isActive('ar')"
+    (click)="setLang('ar')"
+  >
+    عربي
+  </button>
+</div>

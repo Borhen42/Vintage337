@@ -29,7 +29,7 @@
           </header>
 
           <section class="cart-step" aria-labelledby="step-fulfillment">
-            <h2 id="step-fulfillment" class="cart-step__label">Step 01 — Fulfillment selection</h2>
+            <h2 id="step-fulfillment" class="cart-step__label">STEP 01 — FULFILLMENT SELECTION</h2>
             <div class="cart-fulfill" role="group" aria-label="Shipping or pickup">
               <button
                 type="button"
@@ -45,8 +45,8 @@
                     <circle cx="17.5" cy="18" r="1.5" />
                   </svg>
                 </span>
-                <span class="cart-fulfill__name">Payment on delivery</span>
-                <span class="cart-fulfill__price">{{ formatPrice(12) }}</span>
+                <span class="cart-fulfill__name">PAYMENT ON DELIVERY</span>
+                <span class="cart-fulfill__price">{{ formatPrice(8) }}</span>
                 <span class="cart-fulfill__hint">Arrives in 3–5 heritage days.</span>
               </button>
 
@@ -62,7 +62,7 @@
                     <path d="M9 22V12h6v10" stroke-linejoin="round" />
                   </svg>
                 </span>
-                <span class="cart-fulfill__name">In-store pickup</span>
+                <span class="cart-fulfill__name">IN-STORE PICKUP</span>
                 <span class="cart-fulfill__price">FREE</span>
                 <span class="cart-fulfill__hint">Main Archive, Sector 337.</span>
               </button>
@@ -80,15 +80,15 @@
                     <path d="M7 15h4" stroke-linecap="round" />
                   </svg>
                 </span>
-                <span class="cart-fulfill__name">Payment in post</span>
-                <span class="cart-fulfill__price">+{{ formatPrice(5) }}</span>
+                <span class="cart-fulfill__name">PAYMENT IN POST</span>
+                <span class="cart-fulfill__price">+{{ formatPrice(10) }}</span>
                 <span class="cart-fulfill__hint">Available for long distance district.</span>
               </button>
             </div>
           </section>
 
           <section class="cart-step cart-step--payment" aria-labelledby="step-payment">
-            <h2 id="step-payment" class="cart-step__label">Step 02 — Payment archive</h2>
+            <h2 id="step-payment" class="cart-step__label">STEP 02 — PAYMENT ARCHIVE</h2>
             <div class="cart-pay-card">
               <div class="cart-pay-card__radio" aria-hidden="true"></div>
               <div>
@@ -139,6 +139,38 @@
                     [(ngModel)]="altPhone"
                   />
                 </label>
+
+                @if (requiresShipToAddress()) {
+                  <label class="cart-field">
+                    <span class="cart-field__label">Adresse</span>
+                    <textarea
+                      class="cart-field__input cart-field__textarea"
+                      name="shippingAddress"
+                      rows="3"
+                      autocomplete="street-address"
+                      placeholder="Rue, immeuble, ville…"
+                      [(ngModel)]="address"
+                    ></textarea>
+                    @if (attempted() && address.trim().length < 4) {
+                      <span class="cart-field__err">Indiquez une adresse de livraison complète.</span>
+                    }
+                  </label>
+                  <label class="cart-field">
+                    <span class="cart-field__label">Code postal</span>
+                    <input
+                      class="cart-field__input"
+                      name="postalCode"
+                      type="text"
+                      autocomplete="postal-code"
+                      inputmode="text"
+                      placeholder="e.g. 1000"
+                      [(ngModel)]="postalCode"
+                    />
+                    @if (attempted() && postalCode.trim().length < 2) {
+                      <span class="cart-field__err">Le code postal est requis.</span>
+                    }
+                  </label>
+                }
               </div>
             </div>
           </section>
@@ -228,7 +260,7 @@
 
   <footer class="archive-foot">
     <div class="archive-foot__inner">
-      <p class="archive-foot__copy">© 1999 Heritage Archive. All rights reserved.</p>
+      <p class="archive-foot__copy">Heritage Archive · Ready for this season.</p>
       <nav class="archive-foot__nav" aria-label="Legal">
         <a routerLink="/" fragment="contact">Shipping policy</a>
         <a routerLink="/" fragment="contact">Returns</a>

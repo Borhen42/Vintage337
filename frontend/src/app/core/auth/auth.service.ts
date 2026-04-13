@@ -38,7 +38,7 @@ export class AuthService {
       .pipe(
         tap((res) => this.persistSession(res)),
         catchError((err: HttpErrorResponse) => {
-          const msg = this.apiErrorMessage(err, 'Invalid email or password.');
+          const msg = this.loginErrorMessage(err);
           return throwError(() => new Error(msg));
         }),
       );
@@ -58,17 +58,56 @@ export class AuthService {
       .pipe(
         tap((res) => this.persistSession(res)),
         catchError((err: HttpErrorResponse) => {
-          const msg = this.apiErrorMessage(err, 'Could not create your account.');
+          const msg = this.registerErrorMessage(err);
           return throwError(() => new Error(msg));
         }),
       );
   }
 
-  private apiErrorMessage(err: HttpErrorResponse, fallback: string): string {
-    if (typeof err.error === 'object' && err.error !== null && 'message' in err.error) {
-      return String((err.error as { message: string }).message);
+  private registerErrorMessage(err: HttpErrorResponse): string {
+    const body = this.messageFromErrorBody(err);
+    if (err.status === 0) {
+      return "We couldn't reach the server. Check your connection and try again.";
     }
-    return fallback;
+    if (err.status >= 500) {
+      return 'Something went wrong on our side. Please try again in a moment.';
+    }
+    return body ?? 'Could not create your account.';
+  }
+
+  /** Maps HTTP failures for sign-in: network, 5xx, 401/403, and API `message` when present. */
+  private loginErrorMessage(err: HttpErrorResponse): string {
+    const body = this.messageFromErrorBody(err);
+    if (err.status === 0) {
+      return "We couldn't reach the server. Check your connection and try again.";
+    }
+    if (err.status >= 500) {
+      return 'Something went wrong on our side. Please try again in a moment.';
+    }
+    if (err.status === 401) {
+      return body ?? 'Invalid email or password.';
+    }
+    if (err.status === 403) {
+      return body ?? "You don't have permission to sign in. Contact support if you need help.";
+    }
+    if (err.status === 429) {
+      return body ?? 'Too many attempts. Please wait a moment and try again.';
+    }
+    return body ?? 'Sign-in failed. Please try again.';
+  }
+
+  private messageFromErrorBody(err: HttpErrorResponse): string | null {
+    const e = err.error;
+    if (typeof e === 'object' && e !== null && 'message' in e) {
+      const m = (e as { message: unknown }).message;
+      if (typeof m === 'string' && m.trim()) {
+        return m.trim();
+      }
+    }
+    if (typeof e === 'string' && e.trim()) {
+      return e.trim();
+    }
+    return null;
   }
 
   logout(): void {

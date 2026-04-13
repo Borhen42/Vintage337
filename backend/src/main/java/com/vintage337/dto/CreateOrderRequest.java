@@ -15,5 +15,7 @@ public record CreateOrderRequest(
     @Size(max = 64) String customerPhone,
     @Size(max = 64) String customerPhoneSecondary,
     @Size(max = 32) String fulfillment,
+    @Size(max = 500) String shippingAddress,
+    @Size(max = 32) String postalCode,
     @NotEmpty @Valid List<CreateOrderLineRequest> items,
     @NotNull BigDecimal totalAmount) {}

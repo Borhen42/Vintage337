@@ -16,7 +16,7 @@
         id="heritage-nav-sections"
         class="heritage-nav__links"
         [class.heritage-nav__links--open]="menuOpen()"
-        aria-label="Site sections"
+        [attr.aria-label]="'nav.sections' | translate"
       >
         <a
           routerLink="/archive"
@@ -24,7 +24,7 @@
           [routerLinkActiveOptions]="{ exact: true }"
           class="heritage-nav__link"
           (click)="closeMenu()"
-          >Archive</a
+          >{{ 'nav.archive' | translate }}</a
         >
         <a
           routerLink="/catalogue"
@@ -32,7 +32,7 @@
           [routerLinkActiveOptions]="{ exact: true }"
           class="heritage-nav__link"
           (click)="closeMenu()"
-          >Catalogue</a
+          >{{ 'nav.catalogue' | translate }}</a
         >
         <a
           routerLink="/collection"
@@ -40,9 +40,9 @@
           [routerLinkActiveOptions]="{ exact: true }"
           class="heritage-nav__link"
           (click)="closeMenu()"
-          >Collection</a
+          >{{ 'nav.collection' | translate }}</a
         >
-        <a routerLink="/" fragment="contact" class="heritage-nav__link" (click)="closeMenu()">About</a>
+        <a routerLink="/" fragment="contact" class="heritage-nav__link" (click)="closeMenu()">{{ 'nav.about' | translate }}</a>
         <form
           class="heritage-nav__drawer-search"
           role="search"
@@ -52,18 +52,18 @@
             <circle cx="11" cy="11" r="7" />
             <path d="M20 20l-4-4" />
           </svg>
-          <label class="visually-hidden" for="heritage-nav-search-drawer">Search products by name</label>
+          <label class="visually-hidden" for="heritage-nav-search-drawer">{{ 'nav.searchDrawerLabel' | translate }}</label>
           <input
             id="heritage-nav-search-drawer"
             class="heritage-nav__search-input"
             type="search"
             name="q"
-            placeholder="Search archive"
+            [placeholder]="'nav.searchPlaceholder' | translate"
             autocomplete="off"
             spellcheck="false"
             maxlength="120"
           />
-          <button type="submit" class="heritage-nav__search-go" aria-label="Search">Go</button>
+          <button type="submit" class="heritage-nav__search-go" [attr.aria-label]="'nav.go' | translate">{{ 'nav.go' | translate }}</button>
         </form>
       </nav>
     </div>
@@ -75,7 +75,7 @@
       aria-controls="heritage-nav-sections"
       (click)="toggleMenu()"
     >
-      <span class="visually-hidden">{{ menuOpen() ? 'Close menu' : 'Open menu' }}</span>
+      <span class="visually-hidden">{{ menuOpen() ? ('nav.closeMenu' | translate) : ('nav.openMenu' | translate) }}</span>
       @if (menuOpen()) {
         <svg class="heritage-nav__menu-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
           <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
@@ -93,57 +93,132 @@
           <circle cx="11" cy="11" r="7" />
           <path d="M20 20l-4-4" />
         </svg>
-        <label class="visually-hidden" for="heritage-nav-search">Search products by name</label>
+        <label class="visually-hidden" for="heritage-nav-search">{{ 'nav.searchLabel' | translate }}</label>
         <input
           id="heritage-nav-search"
           class="heritage-nav__search-input"
           type="search"
           name="q"
-          placeholder="Search archive"
+          [placeholder]="'nav.searchPlaceholder' | translate"
           autocomplete="off"
           spellcheck="false"
           maxlength="120"
         />
-        <button type="submit" class="heritage-nav__search-submit" tabindex="-1" aria-hidden="true">Search</button>
+        <button type="submit" class="heritage-nav__search-submit" tabindex="-1" aria-hidden="true">{{ 'nav.searchSubmit' | translate }}</button>
       </form>
+      <app-language-switcher />
       @if (!auth.isAuthenticated()) {
-        <a routerLink="/login" class="heritage-nav__icon-btn" aria-label="Sign in">
+        <a routerLink="/login" class="heritage-nav__icon-btn" [attr.aria-label]="'nav.signIn' | translate">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
             <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke-linecap="round" stroke-linejoin="round" />
             <circle cx="12" cy="7" r="4" />
           </svg>
         </a>
       } @else {
-        <button type="button" class="heritage-nav__icon-btn" (click)="logout()" aria-label="Sign out">
+        <button type="button" class="heritage-nav__icon-btn" (click)="logout()" [attr.aria-label]="'nav.signOut' | translate">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
             <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </button>
       }
-      <a routerLink="/" fragment="contact" class="heritage-nav__icon-btn" aria-label="About &amp; contact">
+      <a routerLink="/" fragment="contact" class="heritage-nav__icon-btn" [attr.aria-label]="'nav.aboutContact' | translate">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
           <circle cx="12" cy="12" r="9" />
           <path d="M12 11v5M12 8h.01" stroke-linecap="round" />
         </svg>
       </a>
       @if (auth.isCustomer()) {
-        <a routerLink="/cart" class="heritage-nav__icon-btn heritage-nav__cart" aria-label="Your archive cart">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
-            <path d="M6 6h15l-1.5 9h-12z" />
-            <path d="M6 6L5 3H2" />
-            <circle cx="9" cy="20" r="1" />
-            <circle cx="18" cy="20" r="1" />
-          </svg>
-          @if (cart.totalQuantity() > 0) {
-            <span class="heritage-nav__cart-badge">{{ cart.totalQuantity() }}</span>
+        <div class="heritage-nav__cart-wrap" #cartWrap>
+          <button
+            type="button"
+            class="heritage-nav__icon-btn heritage-nav__cart"
+            [attr.aria-expanded]="cartPanelOpen()"
+            aria-haspopup="true"
+            aria-controls="heritage-cart-panel"
+            [attr.aria-label]="cartPanelOpen() ? ('nav.cartClose' | translate) : ('nav.cartOpen' | translate)"
+            (click)="toggleCartPanel()"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
+              <path d="M6 6h15l-1.5 9h-12z" />
+              <path d="M6 6L5 3H2" />
+              <circle cx="9" cy="20" r="1" />
+              <circle cx="18" cy="20" r="1" />
+            </svg>
+            @if (cart.totalQuantity() > 0) {
+              <span class="heritage-nav__cart-badge">{{ cart.totalQuantity() }}</span>
+            }
+          </button>
+          @if (cartPanelOpen()) {
+            <div
+              id="heritage-cart-panel"
+              class="heritage-nav__cart-panel"
+              role="region"
+              [attr.aria-label]="'nav.cartPreview' | translate"
+            >
+              <div class="heritage-nav__cart-panel__head">
+                <span class="heritage-nav__cart-panel__title">{{ 'nav.yourArchive' | translate }}</span>
+                @if (cart.totalQuantity() > 0) {
+                  <span class="heritage-nav__cart-panel__count">{{ cartQuantityPadded() }} {{ cartItemsWord() }}</span>
+                }
+              </div>
+              @if (!cart.lines().length) {
+                <p class="heritage-nav__cart-panel__empty">{{ 'nav.cartEmpty' | translate }}</p>
+                <a routerLink="/catalogue" class="heritage-nav__cart-panel__link" (click)="closeCartPanel()">{{ 'nav.browseCatalogue' | translate }}</a>
+              } @else {
+                <ul class="heritage-nav__cart-panel__list">
+                  @for (line of cart.lines(); track line.key) {
+                    <li class="heritage-nav__cart-line">
+                      <a
+                        class="heritage-nav__cart-line__link"
+                        [routerLink]="['/product', line.productId]"
+                        (click)="closeCartPanel()"
+                      >
+                        <span class="heritage-nav__cart-line__img-wrap vintage-overlay film-grain">
+                          @if (line.imageUrl) {
+                            <img
+                              class="heritage-nav__cart-line__img"
+                              [src]="line.imageUrl | uploadSrc"
+                              [alt]="line.name"
+                              width="56"
+                              height="56"
+                            />
+                          } @else {
+                            <span class="heritage-nav__cart-line__ph">{{ 'nav.noImage' | translate }}</span>
+                          }
+                        </span>
+                        <span class="heritage-nav__cart-line__body">
+                          <span class="heritage-nav__cart-line__name">{{ line.name }}</span>
+                          <span class="heritage-nav__cart-line__meta">
+                            <span class="heritage-nav__cart-line__tag heritage-nav__cart-line__tag--size">{{ 'nav.size' | translate }}: {{ line.size }}</span>
+                            <span class="heritage-nav__cart-line__tag heritage-nav__cart-line__tag--color">{{ 'nav.color' | translate }}: {{ line.color }}</span>
+                          </span>
+                          <span class="heritage-nav__cart-line__qty">{{ 'nav.qty' | translate }} {{ line.quantity }} · {{ formatPrice(lineTotal(line)) }}</span>
+                          <span class="heritage-nav__cart-line__detail-hint">{{ 'nav.viewDetails' | translate }}</span>
+                        </span>
+                      </a>
+                    </li>
+                  }
+                </ul>
+                <div class="heritage-nav__cart-panel__foot">
+                  <div class="heritage-nav__cart-panel__sub">
+                    <span>{{ 'nav.subtotal' | translate }}</span>
+                    <span>{{ formatPrice(cart.subtotal()) }}</span>
+                  </div>
+                  <a routerLink="/cart" class="heritage-nav__cart-panel__cta ticket-stub" (click)="closeCartPanel()">
+                    {{ 'nav.checkout' | translate }}
+                    <span class="heritage-nav__cart-panel__cta-arrow" aria-hidden="true">→</span>
+                  </a>
+                </div>
+              }
+            </div>
           }
-        </a>
+        </div>
       } @else if (!auth.isAuthenticated()) {
         <a
           routerLink="/login"
           [queryParams]="{ returnUrl: '/cart' }"
           class="heritage-nav__icon-btn heritage-nav__cart"
-          aria-label="Sign in to open your archive cart"
+          [attr.aria-label]="'nav.signInCart' | translate"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true">
             <path d="M6 6h15l-1.5 9h-12z" />
@@ -157,7 +232,7 @@
           routerLink="/"
           fragment="heritage-series"
           class="heritage-nav__icon-btn"
-          aria-label="Client cart: use a customer account to hold pieces"
+          [attr.aria-label]="'nav.clientCartHint' | translate"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" aria-hidden="true" opacity="0.55">
             <path d="M6 6h15l-1.5 9h-12z" />

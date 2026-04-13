@@ -6,6 +6,8 @@ export const PRODUCT_CATEGORIES = [
   'T-shirt',
   'Sweat pants',
   'Jeans pants',
+  'Lunette',
+  'Casquette',
 ] as const;
 
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
@@ -16,6 +18,9 @@ export function sizesForCategory(category: string): string[] {
       return ['36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46'];
     case 'Jeans pants':
       return ['28', '30', '32', '34', '36', '38'];
+    case 'Lunette':
+    case 'Casquette':
+      return ['OS'];
     case 'Hoodie':
     case 'Shirt':
     case 'T-shirt':

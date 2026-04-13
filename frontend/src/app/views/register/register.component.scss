@@ -1,5 +1,5 @@
 /* Single bundle so encapsulation matches all register template nodes (avoid split styleUrls). */
-@import '../login/login.component.scss';
+@use '../login/login.component';
 
 .login-form__demo--register {
   max-width: 22rem;

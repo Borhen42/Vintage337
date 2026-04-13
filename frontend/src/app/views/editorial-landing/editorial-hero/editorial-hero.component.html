@@ -21,7 +21,7 @@
           class="heritage-hero__emblem-img"
           [src]="heroLogoSrc()"
           (error)="onHeroLogoError()"
-          alt="Vintage 337 — Est. 1999"
+          [attr.alt]="'landing.hero.logoAlt' | translate"
           width="280"
           height="280"
           decoding="async"
@@ -31,16 +31,16 @@
 
     <div class="heritage-hero__kicker">
       <span class="heritage-hero__rule" aria-hidden="true"></span>
-      <span class="heritage-hero__kicker-text">Heritage archive</span>
+      <span class="heritage-hero__kicker-text">{{ 'landing.hero.kicker' | translate }}</span>
       <span class="heritage-hero__rule" aria-hidden="true"></span>
     </div>
 
     <h1 id="heritage-hero-title" class="heritage-hero__title">
-      Est. 1999 — Stay true
+      {{ 'landing.hero.title' | translate }}
     </h1>
 
     <p class="heritage-hero__lede">
-      Pensé pour l’artisan moderne. Inspiré par l’esthétique brute des années 90 et le travail du denim et du cuir.
+      {{ 'landing.hero.lede' | translate }}
     </p>
 
     <a class="heritage-hero__cta" href="#heritage-series">
@@ -49,7 +49,7 @@
         <svg class="heritage-hero__star" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z" />
         </svg>
-        <span>Shop the drop</span>
+        <span>{{ 'landing.hero.cta' | translate }}</span>
         <svg class="heritage-hero__star" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M12 2l2.4 7.4h7.6l-6 4.6 2.3 7-6.3-4.6-6.3 4.6 2.3-7-6-4.6h7.6z" />
         </svg>
@@ -59,9 +59,9 @@
 
   <div class="heritage-hero__badge" aria-hidden="true">
     <div class="heritage-hero__badge-ring">
-      <span class="heritage-hero__badge-line heritage-hero__badge-line--accent">Authentic</span>
+      <span class="heritage-hero__badge-line heritage-hero__badge-line--accent">{{ 'landing.hero.badgeAuthentic' | translate }}</span>
       <span class="heritage-hero__badge-num">99</span>
-      <span class="heritage-hero__badge-line">Workwear</span>
+      <span class="heritage-hero__badge-line">{{ 'landing.hero.badgeWorkwear' | translate }}</span>
     </div>
   </div>
 </section>

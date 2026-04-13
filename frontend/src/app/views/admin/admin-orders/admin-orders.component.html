@@ -5,6 +5,7 @@
     <p class="admin-form-page__lead">
       <strong>Accept command</strong> seals the folio: vault stock is decremented and a heritage <strong>command record PDF</strong> downloads.
       <strong>Reject</strong> cancels a pending command without touching inventory.
+      <strong>Cancel command</strong> (after accept) restores every line to stock and removes the sealed record.
     </p>
     <a routerLink="/admin/dashboard" class="admin-form-page__back">&larr; Back to overview</a>
   </header>
@@ -61,6 +62,12 @@
                     @if (o.fulfillment) {
                       <span class="admin-orders__fulfill">{{ o.fulfillment }}</span>
                     }
+                    @if (o.shippingAddress) {
+                      <span class="admin-orders__ship">{{ o.shippingAddress }}</span>
+                    }
+                    @if (o.postalCode) {
+                      <span class="admin-orders__ship admin-orders__ship--postal">{{ o.postalCode }}</span>
+                    }
                   </div>
                 </td>
                 <td class="admin-table__serif admin-orders__lines">{{ lineSummary(o) }}</td>
@@ -94,18 +101,34 @@
                       </button>
                     </div>
                   } @else if (canDownloadCommandRecord(o.status)) {
-                    <button
-                      type="button"
-                      class="admin-orders__download ticket-stub"
-                      [disabled]="downloadId() === o.id"
-                      (click)="downloadCommandRecord(o)"
-                    >
-                      @if (downloadId() === o.id) {
-                        Preparing…
-                      } @else {
-                        Download record
+                    <div class="admin-orders__actions admin-orders__actions--stack">
+                      <button
+                        type="button"
+                        class="admin-orders__download ticket-stub"
+                        [disabled]="downloadId() === o.id || cancelId() === o.id"
+                        (click)="downloadCommandRecord(o)"
+                      >
+                        @if (downloadId() === o.id) {
+                          Preparing…
+                        } @else {
+                          Download record
+                        }
+                      </button>
+                      @if (canCancelAfterAccept(o.status)) {
+                        <button
+                          type="button"
+                          class="admin-orders__cancel"
+                          [disabled]="cancelId() === o.id || downloadId() === o.id"
+                          (click)="cancelCommand(o)"
+                        >
+                          @if (cancelId() === o.id) {
+                            Cancelling…
+                          } @else {
+                            Cancel command
+                          }
+                        </button>
                       }
-                    </button>
+                    </div>
                   } @else {
                     <span class="admin-orders__dash">—</span>
                   }

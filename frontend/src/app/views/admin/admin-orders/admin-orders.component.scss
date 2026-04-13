@@ -220,6 +220,17 @@
   font-weight: 600;
 }
 
+.admin-orders__ship {
+  font-size: 0.7rem;
+  line-height: 1.35;
+  color: var(--on-surface-variant);
+  max-width: 18rem;
+}
+
+.admin-orders__ship--postal {
+  font-weight: 600;
+}
+
 .admin-orders__lines {
   display: block;
 }
@@ -336,6 +347,35 @@
 
   &:hover:not(:disabled) {
     background: color-mix(in srgb, var(--secondary) 12%, transparent);
+  }
+}
+
+.admin-orders__actions--stack {
+  align-items: stretch;
+  min-width: 9.5rem;
+}
+
+.admin-orders__cancel {
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid color-mix(in srgb, var(--secondary) 70%, var(--outline));
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--secondary) 6%, transparent);
+  color: var(--secondary);
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--secondary) 14%, transparent);
   }
 }
 

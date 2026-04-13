@@ -1,8 +1,8 @@
 <div class="admin-root">
-  <aside class="admin-sidenav film-grain" aria-label="Admin navigation">
+  <aside class="admin-sidenav film-grain" [attr.aria-label]="'adminLayout.navigation' | translate">
     <div class="admin-sidenav__brand">
       <h1 class="admin-sidenav__title">Vintage 337</h1>
-      <p class="admin-sidenav__tag">Heritage archive admin</p>
+      <p class="admin-sidenav__tag">{{ 'adminLayout.tagline' | translate }}</p>
     </div>
     <nav class="admin-sidenav__nav">
       <a
@@ -14,37 +14,37 @@
         <span class="admin-sidenav__icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
         </span>
-        Overview
+        {{ 'adminLayout.overview' | translate }}
       </a>
       <a routerLink="/admin/products/new" routerLinkActive="admin-sidenav__link--active" class="admin-sidenav__link">
         <span class="admin-sidenav__icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1 1 0-1.99 0-2h16v2zm0 7H4V6h16v3zm2 9v-7l-8 4v-4l-8 4V7h18v11z"/></svg>
         </span>
-        Add product
+        {{ 'adminLayout.addProduct' | translate }}
       </a>
       <a routerLink="/admin/orders" routerLinkActive="admin-sidenav__link--active" class="admin-sidenav__link">
         <span class="admin-sidenav__icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1.003 1.003 0 0020 4H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
         </span>
-        Orders
+        {{ 'adminLayout.orders' | translate }}
       </a>
       <a routerLink="/admin/customers" routerLinkActive="admin-sidenav__link--active" class="admin-sidenav__link">
         <span class="admin-sidenav__icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.5V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
         </span>
-        Customers
+        {{ 'adminLayout.customers' | translate }}
       </a>
       <a routerLink="/admin/reclamations" routerLinkActive="admin-sidenav__link--active" class="admin-sidenav__link">
         <span class="admin-sidenav__icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z"/></svg>
         </span>
-        Réclamations
+        {{ 'adminLayout.reclamations' | translate }}
       </a>
     </nav>
     <div class="admin-sidenav__footer">
-      <a routerLink="/" class="admin-sidenav__store-btn">View storefront</a>
+      <a routerLink="/" class="admin-sidenav__store-btn">{{ 'adminLayout.viewStorefront' | translate }}</a>
       <button type="button" class="admin-sidenav__signout" (click)="signOut()">
-        Sign out
+        {{ 'adminLayout.signOut' | translate }}
       </button>
     </div>
   </aside>
@@ -59,26 +59,32 @@
           type="search"
           name="q"
           class="admin-topbar__input"
-          placeholder="Search catalogue..."
-          aria-label="Search catalogue"
+          [placeholder]="'adminLayout.searchPlaceholder' | translate"
+          [attr.aria-label]="'adminLayout.searchAria' | translate"
           [(ngModel)]="searchQuery"
         />
       </form>
       <div class="admin-topbar__actions">
         <button
+          #bellBtn
           type="button"
           class="admin-topbar__icon-btn admin-topbar__icon-btn--bell"
-          aria-label="Pending orders"
-          (click)="goToOrders()"
+          [attr.aria-expanded]="notificationsOpen()"
+          aria-haspopup="true"
+          aria-controls="admin-notifications-panel"
+          [attr.aria-label]="notificationAriaLabel()"
+          (click)="toggleNotificationsPanel($event)"
         >
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
-          @if (pendingCount() > 0) {
-            <span class="admin-topbar__badge">{{ pendingCount() > 99 ? '99+' : pendingCount() }}</span>
+          @if (attentionTotal() > 0) {
+            <span class="admin-topbar__badge">{{ attentionTotal() > 99 ? '99+' : attentionTotal() }}</span>
           }
         </button>
-        <button type="button" class="admin-topbar__icon-btn" aria-label="Settings">
+
+        <button type="button" class="admin-topbar__icon-btn" [attr.aria-label]="'adminLayout.settings' | translate">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58a.49.49 0 00.12-.61l-1.92-3.32a.488.488 0 00-.59-.22l-2.39.96c-.52-.4-1.08-.73-1.69-.98l-.36-2.54a.484.484 0 00-.48-.43h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.61.25-1.17.59-1.69.98l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58a.49.49 0 00-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.52.4 1.08.73 1.69.98l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.61-.25 1.17-.59 1.69-.98l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
         </button>
+        <app-language-switcher />
         <div class="admin-topbar__user">
           <span class="admin-topbar__avatar" aria-hidden="true">{{ displayName().charAt(0) }}</span>
           <span class="admin-topbar__name">{{ displayName() }}</span>
@@ -86,16 +92,128 @@
       </div>
     </header>
 
+    @if (notificationsOpen()) {
+      <div
+        #notifPanel
+        id="admin-notifications-panel"
+        class="admin-notifications-panel"
+        role="dialog"
+        aria-modal="true"
+        [attr.aria-label]="'adminLayout.notifications' | translate"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="admin-notifications-panel__head">
+          <h2 class="admin-notifications-panel__title">{{ 'adminLayout.notifications' | translate }}</h2>
+          <button
+            type="button"
+            class="admin-notifications-panel__close"
+            [attr.aria-label]="'adminLayout.close' | translate"
+            (click)="closeNotificationsPanel()"
+          >
+            ×
+          </button>
+        </div>
+
+        @if (notificationFeedLoading()) {
+          <p class="admin-notifications-panel__state">{{ 'adminLayout.loading' | translate }}</p>
+        } @else if (notificationFeedError()) {
+          <p class="admin-notifications-panel__state admin-notifications-panel__state--err">{{ 'adminLayout.couldNotLoadList' | translate }}</p>
+          <button type="button" class="admin-notifications-panel__retry" (click)="refreshNotificationFeed()">{{ 'adminLayout.retry' | translate }}</button>
+        } @else {
+          @let f = notificationFeed();
+          @if (f && (f.pendingOrders.length || f.pendingReclamations.length)) {
+            @if (f.pendingOrders.length) {
+              <p class="admin-notifications-panel__section-label">{{ 'adminLayout.pendingOrders' | translate }}</p>
+              <ul class="admin-notifications-panel__list">
+                @for (o of f.pendingOrders; track o.id) {
+                  <li>
+                    <button type="button" class="admin-notifications-panel__row" (click)="goToOrderFromFeed()">
+                      <span class="admin-notifications-panel__row-kicker">{{ 'adminLayout.order' | translate }}</span>
+                      <span class="admin-notifications-panel__row-title">{{ o.orderNumber }}</span>
+                      <span class="admin-notifications-panel__row-meta">{{ o.customerName || '—' }}</span>
+                      <span class="admin-notifications-panel__row-date">{{ o.createdAt | date: 'short' }}</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+            @if (f.pendingReclamations.length) {
+              <p class="admin-notifications-panel__section-label">{{ 'adminLayout.reclamations' | translate }}</p>
+              <ul class="admin-notifications-panel__list">
+                @for (r of f.pendingReclamations; track r.id) {
+                  <li>
+                    <button type="button" class="admin-notifications-panel__row" (click)="goToReclamationFromFeed()">
+                      <span class="admin-notifications-panel__row-kicker">{{ 'adminLayout.reclamation' | translate }}</span>
+                      <span class="admin-notifications-panel__row-title">{{ r.subject }}</span>
+                      <span class="admin-notifications-panel__row-meta">{{ r.email }}</span>
+                      <span class="admin-notifications-panel__row-date">{{ r.createdAt | date: 'short' }}</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+          } @else {
+            <p class="admin-notifications-panel__state">{{ 'adminLayout.caughtUp' | translate }}</p>
+          }
+        }
+
+        <div class="admin-notifications-panel__foot">
+          <a routerLink="/admin/orders" class="admin-notifications-panel__link" (click)="closeNotificationsPanel()">{{ 'adminLayout.ordersDesk' | translate }}</a>
+          <a routerLink="/admin/reclamations" class="admin-notifications-panel__link" (click)="closeNotificationsPanel()">{{ 'adminLayout.reclamationsDesk' | translate }}</a>
+        </div>
+      </div>
+    }
+
     <main class="admin-content">
-      @if (pendingCount() > 0 && !bannerDismissed()) {
-        <div class="admin-pending-banner" role="status">
-          <p>
-            <strong>{{ pendingCount() }}</strong>
-            order(s) awaiting acceptance.
-          </p>
+      @if (showAttentionBanner()) {
+        <div
+          #attentionBanner
+          class="admin-pending-banner"
+          role="button"
+          tabindex="0"
+          [attr.aria-label]="'adminLayout.openNotificationList' | translate"
+          (click)="onBannerBackgroundClick($event)"
+          (keydown.enter)="openNotificationsPanel()"
+          (keydown.space)="$event.preventDefault(); openNotificationsPanel()"
+        >
+          <div class="admin-pending-banner__copy" role="status" aria-live="polite">
+            @if (pendingOrders() > 0) {
+              <p class="admin-pending-banner__line">
+                {{ pendingOrdersText() }}
+              </p>
+            }
+            @if (pendingReclamations() > 0) {
+              <p class="admin-pending-banner__line">
+                {{ pendingReclamationsText() }}
+              </p>
+            }
+          </div>
           <div class="admin-pending-banner__actions">
-            <button type="button" class="admin-pending-banner__primary" (click)="goToOrders()">View orders</button>
-            <button type="button" class="admin-pending-banner__dismiss" (click)="dismissPendingBanner()">Dismiss</button>
+            @if (pendingOrders() > 0) {
+              <button
+                type="button"
+                class="admin-pending-banner__primary"
+                (click)="$event.stopPropagation(); goToOrders()"
+              >
+                {{ 'adminLayout.viewOrders' | translate }}
+              </button>
+            }
+            @if (pendingReclamations() > 0) {
+              <button
+                type="button"
+                class="admin-pending-banner__secondary"
+                (click)="$event.stopPropagation(); goToReclamations()"
+              >
+                {{ 'adminLayout.viewReclamations' | translate }}
+              </button>
+            }
+            <button
+              type="button"
+              class="admin-pending-banner__dismiss"
+              (click)="$event.stopPropagation(); dismissAttentionBanner()"
+            >
+              {{ 'adminLayout.dismiss' | translate }}
+            </button>
           </div>
         </div>
       }

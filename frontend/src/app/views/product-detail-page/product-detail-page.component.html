@@ -16,7 +16,7 @@
   } @else {
     @let p = product()!;
 
-    <main class="pd-main film-grain">
+    <main class="pd-main film-grain" [class.pd-main--sticky-pad]="stickyBuyVisible()">
       <nav class="pd-breadcrumb" aria-label="Breadcrumb">
         @for (piece of breadcrumbPieces(); track $index; let last = $last) {
           <span class="pd-breadcrumb__item">{{ piece }}</span>
@@ -33,6 +33,7 @@
             <div class="pd-gallery__img-shell vintage-overlay film-grain">
               @if (mainImageUrl()) {
                 <img
+                  #mainImg
                   class="pd-gallery__img"
                   [src]="mainImageUrl()"
                   [alt]="p.name"
@@ -136,6 +137,7 @@
           }
 
           <button
+            #buyCtaAnchor
             type="button"
             class="pd-cta ticket-stub"
             [disabled]="stockForSelection() <= 0"
@@ -237,11 +239,49 @@
         <button type="button" class="pd-back__link" (click)="goBack()">← Back to catalogue</button>
       </p>
     </main>
+
+    @if (stickyBuyVisible()) {
+      <div class="pd-sticky-buy" role="region" aria-label="Quick purchase">
+        <div class="pd-sticky-buy__inner">
+          <div class="pd-sticky-buy__info">
+            <span class="pd-sticky-buy__price">{{ formatPrice(p.price) }}</span>
+            @if (stickyVariantHint()) {
+              <span class="pd-sticky-buy__variant">{{ stickyVariantHint() }}</span>
+            }
+          </div>
+          <button
+            type="button"
+            class="pd-sticky-buy__cta ticket-stub"
+            [disabled]="stockForSelection() <= 0"
+            [attr.aria-label]="
+              stockForSelection() <= 0
+                ? p.name + ' is out of stock'
+                : 'Add ' + p.name + ' for ' + formatPrice(p.price) + ' to archive'
+            "
+            (click)="addToArchive()"
+          >
+            <span class="pd-sticky-buy__cta-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M3 7h5l2 3h11v9a2 2 0 01-2 2H5a2 2 0 01-2-2V7z" stroke-linejoin="round" />
+                <path d="M8 21V11h8v10" stroke-linejoin="round" />
+              </svg>
+            </span>
+            @if (addAck()) {
+              <span>Held</span>
+            } @else if (stockForSelection() <= 0) {
+              <span>Out</span>
+            } @else {
+              <span>Add</span>
+            }
+          </button>
+        </div>
+      </div>
+    }
   }
 
   <footer class="archive-foot">
     <div class="archive-foot__inner">
-      <p class="archive-foot__copy">© 1999 Heritage Archive. All rights reserved.</p>
+      <p class="archive-foot__copy">Heritage Archive · Built for the current drop.</p>
       <nav class="archive-foot__nav" aria-label="Legal">
         <a href="#">Shipping &amp; returns</a>
         <a href="#">Privacy policy</a>

@@ -32,6 +32,14 @@ export class CartPageComponent {
   fullName = '';
   phone = '';
   altPhone = '';
+  /** Required when fulfillment is delivery (standard or post). */
+  address = '';
+  postalCode = '';
+
+  readonly requiresShipToAddress = computed(() => {
+    const f = this.fulfillment();
+    return f === 'standard' || f === 'cod';
+  });
 
   readonly itemBadge = computed(() => {
     const n = this.cart.lines().length;
@@ -43,11 +51,11 @@ export class CartPageComponent {
   readonly logisticsAmount = computed(() => {
     switch (this.fulfillment()) {
       case 'standard':
-        return 12;
+        return 8;
       case 'pickup':
         return 0;
       case 'cod':
-        return 5;
+        return 10;
       default:
         return 0;
     }
@@ -69,11 +77,11 @@ export class CartPageComponent {
   readonly paymentHeadline = computed(() => {
     switch (this.fulfillment()) {
       case 'cod':
-        return 'Payment in post';
+        return 'PAYMENT IN POST';
       case 'pickup':
-        return 'Pay at the archive desk';
+        return 'IN-STORE PICKUP';
       default:
-        return 'Payment on delivery';
+        return 'PAYMENT ON DELIVERY';
     }
   });
 
@@ -82,7 +90,7 @@ export class CartPageComponent {
       case 'cod':
         return 'Available for long distance district.';
       case 'pickup':
-        return 'Settle when you collect at Main Archive, Sector 337.';
+        return 'Main Archive, Sector 337.';
       default:
         return 'Arrives in 3–5 heritage days.';
     }
@@ -107,6 +115,11 @@ export class CartPageComponent {
     if (!this.cart.lines().length) return;
     const ok = this.fullName.trim().length >= 2 && this.phone.trim().length >= 6;
     if (!ok) return;
+    if (this.requiresShipToAddress()) {
+      if (this.address.trim().length < 4 || this.postalCode.trim().length < 2) {
+        return;
+      }
+    }
     const email = this.auth.email();
     if (!email?.trim()) {
       this.submitError.set('Sign in again to place an order.');
@@ -121,12 +134,15 @@ export class CartPageComponent {
       variantColor: l.color === 'Default' ? null : l.color,
     }));
     const alt = this.altPhone.trim();
+    const ship = this.requiresShipToAddress();
     const body = {
       customerName: this.fullName.trim(),
       customerEmail: email.trim(),
       customerPhone: this.phone.trim(),
       customerPhoneSecondary: alt.length > 0 ? alt : null,
       fulfillment: this.fulfillment(),
+      shippingAddress: ship ? this.address.trim() : null,
+      postalCode: ship ? this.postalCode.trim() : null,
       items,
       totalAmount: this.total(),
     };
@@ -141,6 +157,8 @@ export class CartPageComponent {
         this.fullName = '';
         this.phone = '';
         this.altPhone = '';
+        this.address = '';
+        this.postalCode = '';
       },
       error: (err: HttpErrorResponse) => {
         this.submitting.set(false);

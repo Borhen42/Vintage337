@@ -212,6 +212,12 @@
   gap: 0.35rem;
 }
 
+.cart-field__textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+  line-height: 1.45;
+}
+
 .cart-field__label {
   font-family: var(--font-body);
   font-size: 0.65rem;

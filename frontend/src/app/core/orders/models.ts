@@ -15,6 +15,8 @@ export type AdminOrder = {
   customerPhone: string | null;
   customerPhoneSecondary: string | null;
   fulfillment: string | null;
+  shippingAddress: string | null;
+  postalCode: string | null;
   status: string;
   totalAmount: number;
   createdAt: string;

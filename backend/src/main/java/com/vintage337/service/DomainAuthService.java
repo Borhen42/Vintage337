@@ -7,10 +7,12 @@ import com.vintage337.entity.User;
 import com.vintage337.entity.UserRole;
 import com.vintage337.exception.EmailTakenException;
 import com.vintage337.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class DomainAuthService {
@@ -38,7 +40,9 @@ public class DomainAuthService {
       throw new BadCredentialsException("Invalid email or password.");
     }
     if (user.isBlocked()) {
-      throw new BadCredentialsException("Invalid email or password.");
+      throw new ResponseStatusException(
+          HttpStatus.FORBIDDEN,
+          "This account has been disabled. Contact support if you think this is a mistake.");
     }
     String token = jwtService.generateToken(user);
     return new LoginResponse(token, "Bearer", user.getEmail(), user.getRole().name());

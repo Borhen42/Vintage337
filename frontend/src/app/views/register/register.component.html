@@ -85,8 +85,12 @@
                   placeholder="you@vintage337.com"
                 />
                 <div class="login-field__line" aria-hidden="true"></div>
-                @if (submitted && form.controls.email.invalid) {
-                  <span class="login-field__hint">Enter a valid email.</span>
+                @if ((submitted || form.controls.email.touched) && form.controls.email.invalid) {
+                  @if (form.controls.email.errors?.['required']) {
+                    <span class="login-field__hint">Enter your email.</span>
+                  } @else {
+                    <span class="login-field__hint">Use a valid address (e.g. name&#64;example.com).</span>
+                  }
                 }
               </div>
 

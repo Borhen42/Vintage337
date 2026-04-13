@@ -73,7 +73,19 @@ public class OrderService {
     String phone2 = req.customerPhoneSecondary();
     order.setCustomerPhoneSecondary(phone2 == null || phone2.isBlank() ? null : phone2.trim());
     String ful = req.fulfillment();
-    order.setFulfillment(ful == null || ful.isBlank() ? null : ful.trim());
+    String fulNorm = ful == null || ful.isBlank() ? "" : ful.trim();
+    order.setFulfillment(fulNorm.isEmpty() ? null : fulNorm);
+    String addr = req.shippingAddress() == null ? "" : req.shippingAddress().trim();
+    String pc = req.postalCode() == null ? "" : req.postalCode().trim();
+    if ("standard".equalsIgnoreCase(fulNorm) || "cod".equalsIgnoreCase(fulNorm)) {
+      if (addr.isEmpty() || pc.isEmpty()) {
+        throw new ResponseStatusException(
+            HttpStatus.BAD_REQUEST,
+            "Address and postal code are required for this delivery option.");
+      }
+    }
+    order.setShippingAddress(addr.isEmpty() ? null : addr);
+    order.setPostalCode(pc.isEmpty() ? null : pc);
     order.setStatus(OrderStatus.PENDING);
     order.setTotalAmount(req.totalAmount());
 
@@ -139,6 +151,8 @@ public class OrderService {
             csvCell("customer_email"),
             csvCell("customer_phone"),
             csvCell("customer_phone_secondary"),
+            csvCell("shipping_address"),
+            csvCell("postal_code"),
             csvCell("line_items"),
             csvCell("total_amount")));
     sb.append('\n');
@@ -154,6 +168,8 @@ public class OrderService {
               csvCell(o.getCustomerEmail()),
               csvCell(o.getCustomerPhone()),
               csvCell(o.getCustomerPhoneSecondary()),
+              csvCell(o.getShippingAddress()),
+              csvCell(o.getPostalCode()),
               csvCell(lineItemsSummary(o)),
               csvCell(o.getTotalAmount() == null ? "" : o.getTotalAmount().toPlainString())));
       sb.append('\n');
@@ -230,6 +246,8 @@ public class OrderService {
         o.getCustomerPhone(),
         o.getCustomerPhoneSecondary(),
         o.getFulfillment(),
+        o.getShippingAddress(),
+        o.getPostalCode(),
         o.getStatus().name(),
         o.getTotalAmount(),
         o.getCreatedAt(),
@@ -338,6 +356,53 @@ public class OrderService {
     order.setStatus(OrderStatus.CANCELLED);
     orderRepository.save(order);
     return toAdminResponse(order);
+  }
+
+  /**
+   * Cancels a command. Pending orders: no stock was reserved (same as reject). Confirmed / in fulfilment /
+   * completed: restores vault stock for each line (inverse of accept) and removes the sealed command record.
+   */
+  @Transactional
+  public AdminOrderResponse cancelCommand(long orderId) {
+    Order order =
+        orderRepository
+            .findByIdWithItemsAndProducts(orderId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found."));
+    if (order.getStatus() == OrderStatus.CANCELLED) {
+      throw new ResponseStatusException(HttpStatus.CONFLICT, "This command is already cancelled.");
+    }
+    if (order.getStatus() == OrderStatus.PENDING) {
+      order.setStatus(OrderStatus.CANCELLED);
+      orderRepository.save(order);
+      return toAdminResponse(order);
+    }
+    if (hadStockDeducted(order.getStatus())) {
+      for (OrderItem item : order.getItems()) {
+        Product p =
+            productRepository
+                .findById(item.getProduct().getId())
+                .orElseThrow(
+                    () ->
+                        new ResponseStatusException(
+                            HttpStatus.INTERNAL_SERVER_ERROR, "Missing product for order line."));
+        productStockService.incrementForLine(
+            p, item.getVariantSize(), item.getVariantColor(), item.getQuantity());
+        productRepository.save(p);
+      }
+      if (orderCommandRecordRepository.existsById(orderId)) {
+        orderCommandRecordRepository.deleteById(orderId);
+      }
+    }
+    order.setStatus(OrderStatus.CANCELLED);
+    orderRepository.save(order);
+    return toAdminResponse(order);
+  }
+
+  private static boolean hadStockDeducted(OrderStatus status) {
+    return status == OrderStatus.CONFIRMED
+        || status == OrderStatus.PROCESSING
+        || status == OrderStatus.SHIPPING
+        || status == OrderStatus.COMPLETED;
   }
 
   private static String newOrderNumber() {

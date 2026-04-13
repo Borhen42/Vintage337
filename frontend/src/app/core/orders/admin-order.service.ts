@@ -23,6 +23,10 @@ export class AdminOrderService {
     return this.http.post<AdminOrder>(`/api/admin/orders/${id}/reject`, {});
   }
 
+  cancel(id: number): Observable<AdminOrder> {
+    return this.http.post<AdminOrder>(`/api/admin/orders/${id}/cancel`, {});
+  }
+
   /** Sealed command record PDF (GET — same document as on accept, for re-download). */
   commandRecordPdf(id: number): Observable<HttpResponse<Blob>> {
     return this.http.get(`/api/admin/orders/${id}/command-record`, {

@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth/auth.service';
+import { emailFieldValidators } from '../../core/validation/email';
 
 const passwordsMatchValidator: ValidatorFn = (
   group: AbstractControl,
@@ -35,7 +36,7 @@ export class RegisterComponent {
   readonly form = this.fb.nonNullable.group(
     {
       fullName: ['', [Validators.required, Validators.maxLength(120)]],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', emailFieldValidators],
       password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(128)]],
       confirmPassword: ['', Validators.required],
     },
