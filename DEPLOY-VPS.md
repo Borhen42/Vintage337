@@ -133,3 +133,7 @@ Add Vercel environment variable `VINTAGE337_API_BASE_URL` = your public API URL 
 ## Optional: managed Postgres
 
 Point the API at Supabase/Neon via `SPRING_DATASOURCE_*`. See [database/supabase-notes.txt](database/supabase-notes.txt).
+
+## Deploy on Render instead of a VPS
+
+See [DEPLOY-RENDER.md](DEPLOY-RENDER.md) for a Render + Supabase deployment guide.

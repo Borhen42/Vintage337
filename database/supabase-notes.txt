@@ -19,17 +19,48 @@ If you still get password errors: another app may be using 5433, or an old conta
    docker compose down -v
    docker compose up -d
 
-Using Supabase in the cloud
-----------------------------
+Using Supabase in the cloud (local dev / Windows)
+--------------------------------------------------
+For local development on Windows where IPv6 is unavailable, use the Session pooler
+(IPv4). Do NOT use the pooler for long-running server deployments (see below).
+
 1. Dashboard → green "Connect" → "Session pooler".
 2. Copy the URI. Example shape:
    postgresql://postgres.xxxxx:[PASSWORD]@aws-0-REGION.pooler.supabase.com:5432/postgres
 3. In application-local.properties set:
-   spring.datasource.url=jdbc:postgresql://aws-0-REGION.pooler.supabase.com:5432/postgres?sslmode=require
+   spring.datasource.url=jdbc:postgresql://aws-0-REGION.pooler.supabase.com:5432/postgres?sslmode=require&prepareThreshold=0
    spring.datasource.username=postgres.xxxxx    (exact string from URI)
    spring.datasource.password=your password
 4. Comment out or remove the localhost lines above.
 
-Optional: Supabase IPv4 add-on for direct db.* connection (paid).
+NOTE: append &prepareThreshold=0 when using the pooler (port 5432 session pooler or
+port 6543 transaction pooler). Without it Hibernate/Flyway uses server-side prepared
+statements that PgBouncer discards across connections, causing:
+  ERROR: prepared statement "S_1" does not exist
+
+Using Supabase from a cloud server / Render / Railway / Fly.io
+--------------------------------------------------------------
+For long-running servers (not serverless), use the DIRECT connection, not the pooler.
+The direct host resolves over IPv6, which all major cloud providers support.
+
+Connection details (Supabase dashboard → Connect → Direct connection):
+  Host:     db.<project-ref>.supabase.co
+  Port:     5432
+  Database: postgres
+  User:     postgres   (plain, not postgres.<project-ref>)
+
+JDBC URL format:
+  jdbc:postgresql://db.<project-ref>.supabase.co:5432/postgres
+
+Set environment variables (on Render: Service → Environment):
+  SPRING_DATASOURCE_URL      = jdbc:postgresql://db.<project-ref>.supabase.co:5432/postgres
+  SPRING_DATASOURCE_USERNAME = postgres
+  SPRING_DATASOURCE_PASSWORD = <your Supabase DB password>
+
+Important:
+- Do NOT embed the password in SPRING_DATASOURCE_URL; put it only in SPRING_DATASOURCE_PASSWORD.
+- Do NOT use the pooler host (*.pooler.supabase.com) or port 6543 for Render; it causes the
+  "prepared statement does not exist" error during Flyway migration on startup.
+- prepareThreshold=0 is NOT needed with the direct connection.
 
 First API start seeds: admin@vintage337.com / heritage337, user@vintage337.com / heritage337
