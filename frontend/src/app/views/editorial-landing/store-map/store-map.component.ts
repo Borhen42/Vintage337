@@ -38,7 +38,8 @@ export class StoreMapComponent implements AfterViewInit, OnDestroy {
     const el = this.mapHost?.nativeElement;
     if (!el || typeof window === 'undefined') return;
 
-    const L = await import('leaflet');
+    const leafletModule = await import('leaflet');
+    const L = (leafletModule as any).default ?? leafletModule;
 
     this.map = L.map(el, {
       center: [STORE_LAT, STORE_LNG],
