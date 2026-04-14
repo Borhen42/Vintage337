@@ -35,6 +35,7 @@ export class ProductDetailPageComponent {
   readonly auth = inject(AuthService);
   private readonly cart = inject(CartService);
   private readonly injector = inject(Injector);
+  private readonly destroyRef = inject(DestroyRef);
 
   /** Main hero image — animated when the archive colorway changes. */
   /** Main hero image — animated when the archive colorway changes. */
@@ -56,6 +57,7 @@ readonly lightboxOpen = signal(false);
 private readonly buyCtaRef = viewChild<ElementRef<HTMLElement>>('buyCtaAnchor');
 private readonly lightboxImgEl = viewChild<ElementRef<HTMLImageElement>>('lightboxImg');
 private readonly boundLightboxKey = (e: KeyboardEvent) => { if (e.key === 'Escape') this.closeLightbox(); };  private stickyBuyObserver: IntersectionObserver | null = null;
+  private addAckTimer: ReturnType<typeof window.setTimeout> | null = null;
   private stickyBuyMq: MediaQueryList | null = null;
   private stickyBuyMqListener: (() => void) | null = null;
   private readonly boundOnImageMove = (e: MouseEvent) => this.onImageMove(e);
@@ -165,8 +167,11 @@ private readonly boundLightboxKey = (e: KeyboardEvent) => { if (e.key === 'Escap
   });
 
   constructor() {
-    const destroyRef = inject(DestroyRef);
-destroyRef.onDestroy(() => {
+    this.destroyRef.onDestroy(() => {
+  if (this.addAckTimer !== null) {
+    window.clearTimeout(this.addAckTimer);
+    this.addAckTimer = null;
+  }
   const el = this.mainImgEl()?.nativeElement;
   if (el) gsap.killTweensOf(el);
   this._teardownLightbox();
@@ -176,7 +181,7 @@ destroyRef.onDestroy(() => {
 
     this.route.paramMap
       .pipe(
-        takeUntilDestroyed(),
+        takeUntilDestroyed(this.destroyRef),
         switchMap((pm) => {
           const raw = pm.get('id');
           const id = raw ? Number.parseInt(raw, 10) : NaN;
@@ -211,6 +216,9 @@ destroyRef.onDestroy(() => {
         this.applyVariantSelection(p);
         afterNextRender(
           () => {
+            if (this.destroyRef.destroyed) {
+              return;
+            }
             const img = this.mainImgEl()?.nativeElement;
             if (img) {
               gsap.killTweensOf(img);
@@ -358,9 +366,15 @@ destroyRef.onDestroy(() => {
       duration: 0.32,
       ease: 'power2.in',
       onComplete: () => {
+        if (this.destroyRef.destroyed) {
+          return;
+        }
         this.applyColorSelection(color, nextIdx);
         afterNextRender(
           () => {
+            if (this.destroyRef.destroyed) {
+              return;
+            }
             const img = this.mainImgEl()?.nativeElement;
             if (!img) {
               return;
@@ -434,7 +448,13 @@ destroyRef.onDestroy(() => {
     const color = this.selectedColor() ?? 'Default';
     this.cart.addFromProduct(p, size, color, this.stockForSelection());
     this.addAck.set(true);
-    window.setTimeout(() => {
+    if (this.addAckTimer !== null) {
+      window.clearTimeout(this.addAckTimer);
+    }
+    this.addAckTimer = window.setTimeout(() => {
+      if (this.destroyRef.destroyed) {
+        return;
+      }
       this.addAck.set(false);
       void this.router.navigateByUrl('/cart');
     }, 400);
@@ -527,6 +547,9 @@ openLightbox(): void {
 
   afterNextRender(
     () => {
+      if (this.destroyRef.destroyed) {
+        return;
+      }
       const img = this.lightboxImgEl()?.nativeElement;
       if (!img) return;
       gsap.fromTo(

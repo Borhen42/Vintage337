@@ -1,7 +1,7 @@
 package com.vintage337.config;
 
-import com.vintage337.service.FileStorageService;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -12,18 +12,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-  private final FileStorageService fileStorageService;
+  @Value("${app.upload.dir:uploads}")
+  private String uploadDir;
 
   @Value("${app.cors.allowed-origins:http://localhost:4200,http://127.0.0.1:4200}")
   private String corsAllowedOrigins;
 
-  public WebConfig(FileStorageService fileStorageService) {
-    this.fileStorageService = fileStorageService;
-  }
-
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    Path uploadRoot = fileStorageService.getProductsDirectory().getParent();
+    Path uploadRoot = Paths.get(uploadDir).toAbsolutePath().normalize();
     String location = uploadRoot.toAbsolutePath().normalize().toUri().toString();
     if (!location.endsWith("/")) {
       location = location + "/";

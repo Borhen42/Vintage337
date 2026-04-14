@@ -4,7 +4,6 @@ import com.vintage337.dto.CreateReclamationRequest;
 import com.vintage337.dto.ReclamationResponse;
 import com.vintage337.service.JwtService;
 import com.vintage337.service.ReclamationService;
-import io.jsonwebtoken.Claims;
 import jakarta.validation.Valid;
 import java.util.Optional;
 import org.springframework.http.HttpStatus;
