@@ -283,7 +283,7 @@ private readonly boundLightboxKey = (e: KeyboardEvent) => { if (e.key === 'Escap
       this.stickyBuyObserver.observe(el);
     };
 
-    afterNextRender(() => attach(), { injector: this.injector });
+    afterNextRender(() => { if (!this.destroyRef.destroyed) attach(); }, { injector: this.injector });
 
     this.stickyBuyMqListener = () => attach();
     this.stickyBuyMq.addEventListener('change', this.stickyBuyMqListener);
