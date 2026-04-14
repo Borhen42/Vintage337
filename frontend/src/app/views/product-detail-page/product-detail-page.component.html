@@ -31,22 +31,17 @@
           <div class="pd-gallery__stage">
             <span class="pd-est" aria-hidden="true">Est. {{ yearEst(p.createdAt) }}</span>
 <div class="pd-gallery__img-shell vintage-overlay film-grain" (click)="openLightbox()">
-  @if (mainImageUrl()) {
-    <img
-      #mainImg
-      class="pd-gallery__img"
-      [src]="mainImageUrl()"
-      [alt]="p.name"
-      width="900"
-      height="900"
-      fetchpriority="high"
-      loading="eager"
-      decoding="async"
-    />
-  } @else {
-    <div class="pd-gallery__placeholder">No image on file</div>
-  }
-  <span class="pd-gallery__zoom-hint" aria-hidden="true">⊕</span>
+  <img
+    #mainImg
+    class="pd-gallery__img"
+    [src]="mainImageUrl()"
+    [alt]="p.name"
+    width="900"
+    height="900"
+    fetchpriority="high"
+    loading="eager"
+    decoding="async"
+  />
 </div>
 
 @if (lightboxOpen()) {

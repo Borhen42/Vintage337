@@ -21,6 +21,28 @@ import { CartService } from '../../core/cart/cart.service';
 import { formatCurrency } from '../../core/format/currency';
 import { resolveMediaUrl } from '../../core/media/resolve-media-url';
 
+/** Minimal SVG placeholder for products without assigned images */
+function placeholderImageSvg(): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 900">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e8dcc8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d6c8b0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="900" height="900" fill="url(#grad)" />
+  <g opacity="0.3">
+    <text x="450" y="380" font-family="sans-serif" font-size="80" font-weight="300" text-anchor="middle" fill="#5c3d2e">
+      archive
+    </text>
+    <text x="450" y="480" font-family="sans-serif" font-size="32" text-anchor="middle" fill="#5c3d2e">
+      no image
+    </text>
+  </g>
+</svg>`;
+  return `data:image/svg+xml;base64,${btoa(svg)}`;
+}
+
 @Component({
   selector: 'app-product-detail-page',
   standalone: true,
@@ -75,7 +97,7 @@ private readonly boundLightboxKey = (e: KeyboardEvent) => { if (e.key === 'Escap
   readonly mainImageUrl = computed(() => {
     const g = this.gallery();
     const i = this.selectedImageIndex();
-    if (!g.length) return '';
+    if (!g.length) return placeholderImageSvg();
     const clamped = Math.min(Math.max(0, i), g.length - 1);
     return g[clamped] ?? '';
   });
