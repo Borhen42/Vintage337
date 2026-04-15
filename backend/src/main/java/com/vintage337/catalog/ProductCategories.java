@@ -19,7 +19,8 @@ public final class ProductCategories {
                   "Sweat pants",
                   "Jeans pants",
                   "Lunette",
-                  "Casquette")));
+                  "Casquette",
+                  "Jacket")));
 
   private ProductCategories() {}
 
