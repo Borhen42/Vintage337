@@ -10,9 +10,11 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { CircleMarker, Map as LeafletMap } from 'leaflet';
 import { Subscription } from 'rxjs';
 
-const STORE_LAT = 36.7987764;
-const STORE_LNG = 10.1811531;
+const STORE_LAT = 36.798505;
+const STORE_LNG = 10.1812511;
 const STORE_ZOOM = 16;
+const GOOGLE_MAPS_URL =
+  'https://www.google.com/maps/place/36%C2%B047%2754.6%22N+10%C2%B010%2752.5%22E/@36.798505,10.1786762,17z/data=!3m1!4b1!4m4!3m3!8m2!3d36.798505!4d10.1812511?hl=en';
 
 @Component({
   selector: 'app-store-map',
@@ -26,6 +28,7 @@ export class StoreMapComponent implements AfterViewInit, OnDestroy {
 
   readonly lat = STORE_LAT;
   readonly lng = STORE_LNG;
+  readonly googleMapsUrl = GOOGLE_MAPS_URL;
 
   private readonly translate = inject(TranslateService);
   private map?: LeafletMap;

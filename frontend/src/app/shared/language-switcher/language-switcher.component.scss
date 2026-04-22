@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   gap: 0.15rem;
-  background: color-mix(in srgb, #ffffff 10%, transparent);
+  background: color-mix(in srgb, var(--heritage-nav-ink, #ffffff) 7%, transparent);
   border-radius: var(--radius-lg);
   padding: 0.2rem;
 }
@@ -16,7 +16,7 @@
   border: none;
   border-radius: calc(var(--radius-lg) - 0.05rem);
   background: transparent;
-  color: var(--surface);
+  color: var(--heritage-nav-ink, var(--surface));
   font-family: var(--font-body);
   font-size: 0.58rem;
   font-weight: 700;
@@ -35,8 +35,8 @@
 
   &--active {
     opacity: 1;
-    background: color-mix(in srgb, #ffffff 18%, transparent);
-    color: var(--tertiary-fixed-dim);
+    background: color-mix(in srgb, var(--heritage-nav-ink, #ffffff) 12%, transparent);
+    color: var(--heritage-nav-accent, var(--tertiary-fixed-dim));
   }
 
   &--ar {

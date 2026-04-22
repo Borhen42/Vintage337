@@ -77,14 +77,14 @@
     },
     "store": {
       "title": "Localiser la boutique",
-      "addressLine1": "Centre commercial le Palmarium Tunis · Boutique n° 156",
-      "addressLine2": "Tunis, Tunisie · 1001",
+      "addressLine1": "36°47'54.6\"N, 10°10'52.5\"E",
+      "addressLine2": "Tunis, Tunisie",
       "openMap": "Ouvrir la carte complète",
       "mapLabel": "Carte OpenStreetMap avec l'emplacement de la boutique",
-      "popup": "Boutique n° 156 · Centre commercial le Palmarium, Tunis"
+      "popup": "36°47'54.6\"N, 10°10'52.5\"E · Tunis, Tunisie"
     },
     "footer": {
-      "address": "Centre commercial le Palmarium Tunis, boutique n° 156, Tunis, Tunisie, 1001",
+      "address": "36°47'54.6\"N, 10°10'52.5\"E, Tunis, Tunisie",
       "navLabel": "Liens du pied de page",
       "joinCrew": "Rejoindre le crew",
       "storeLocator": "Localiser la boutique",
