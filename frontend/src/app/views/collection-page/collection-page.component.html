@@ -3,48 +3,32 @@
 
   <main class="archive-main archive-tabletop film-grain">
     <header class="archive-hero">
-      <span class="archive-hero__kicker">Curated Lines</span>
-      <h1 class="archive-hero__title">Collections.</h1>
+      <span class="archive-hero__kicker">One of a Kind</span>
+      <h1 class="archive-hero__title">Unique Pieces.</h1>
       <p class="archive-hero__lead">
-        Each collection is a chapter in the Vintage337 story—grouped by fabric, era, and utility. Wander from canvas to
-        leather the way an archivist would shelve a reading room.
+        Each piece listed here exists in a single copy. Once it's gone, it's gone—these are the rarest finds in the
+        Vintage337 vault.
       </p>
     </header>
 
-    <section class="archive-gallery" aria-label="Collections by category">
-      @if (catalog.loadError()) {
-        <p class="archive-empty" role="alert">
-          Collections could not be loaded. Start the API (mvn spring-boot:run) and refresh.
-        </p>
-      } @else if (catalog.items().length === 0) {
-        <p class="archive-empty">
-          No collections yet—add products in admin and they will group automatically by category.
-        </p>
-      }
-
-      @for (g of groups(); track g.name) {
-        <div class="heritage-collection-block">
-          <div class="heritage-collection-block__head">
-            <h2 class="heritage-collection-block__title">{{ g.name }}</h2>
-            <span class="heritage-collection-block__count">{{ g.products.length }} pieces</span>
-          </div>
-          <app-heritage-product-polaroid-grid
-            [products]="g.products"
-            [loadError]="false"
-            [showPlaceholderTile]="false"
-            [showPlaceholderWhenFew]="false"
-            [indexOffset]="blockOffset(g.blockIndex)"
-          />
-        </div>
-      }
+    <section class="archive-gallery" aria-label="Unique pieces">
+      <app-heritage-product-polaroid-grid
+        [products]="uniqueItems()"
+        [loading]="!catalog.listHydrated()"
+        [loadError]="catalog.loadError()"
+        emptyMessage="No unique pieces available right now—check back soon."
+        [showPlaceholderTile]="false"
+        [showPlaceholderWhenFew]="false"
+        [indexOffset]="0"
+      />
     </section>
 
     <section class="archive-cta film-grain" aria-labelledby="collection-cta-heading">
       <div class="archive-cta__inner">
-        <h2 id="collection-cta-heading" class="archive-cta__title">Commit to a Line.</h2>
+        <h2 id="collection-cta-heading" class="archive-cta__title">Don't Wait.</h2>
         <p class="archive-cta__copy">
-          Collections rotate as we acquire new deadstock and estate pieces. Register to be notified when a line you follow
-          is restocked—or explore the full vault in the Archive.
+          Unique pieces move fast. Once sold, they're gone for good. Explore the full catalogue to discover more
+          rare finds before they disappear.
         </p>
         
         <p class="archive-cta__hint">
@@ -61,7 +45,7 @@
 
   <footer class="archive-foot">
     <div class="archive-foot__inner">
-      <p class="archive-foot__copy">Vintage337 Heritage Collections · New rotation</p>
+      <p class="archive-foot__copy">Vintage337 · Unique Pieces</p>
       <nav class="archive-foot__nav" aria-label="Legal">
         <a href="#">Terms</a>
         <a href="#">Privacy</a>

@@ -2,8 +2,34 @@
   <app-editorial-navbar />
 
   @if (loading()) {
-    <main class="pd-main film-grain">
-      <p class="pd-state">Opening archive folio…</p>
+    <div class="v337-loading-bar" role="progressbar" aria-label="Loading product" aria-busy="true"></div>
+    <main class="pd-main film-grain" aria-hidden="true">
+      <div class="pd-skel">
+        <div class="pd-skel__breadcrumb skel"></div>
+        <div class="pd-skel__body">
+          <div class="pd-skel__gallery">
+            <div class="pd-skel__main-img skel"></div>
+            <div class="pd-skel__thumbs">
+              @for (_ of [1,2,3,4]; track $index) {
+                <div class="pd-skel__thumb skel"></div>
+              }
+            </div>
+          </div>
+          <div class="pd-skel__info">
+            <div class="pd-skel__badge skel"></div>
+            <div class="pd-skel__title skel"></div>
+            <div class="pd-skel__title pd-skel__title--short skel"></div>
+            <div class="pd-skel__meta skel"></div>
+            <div class="pd-skel__price skel"></div>
+            <div class="pd-skel__sizes">
+              @for (_ of [1,2,3,4,5]; track $index) {
+                <div class="pd-skel__size-chip skel"></div>
+              }
+            </div>
+            <div class="pd-skel__btn skel"></div>
+          </div>
+        </div>
+      </div>
     </main>
   } @else if (notFound() || !product()) {
     <main class="pd-main film-grain">

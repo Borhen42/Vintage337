@@ -64,3 +64,38 @@
     color: var(--secondary-container);
   }
 }
+
+/* ── Shared admin skeleton table ──────────────────────────────── */
+.admin-skel-wrap {
+  position: relative;
+  padding-top: 0.125rem;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.admin-skel-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 1rem;
+  border: 1px solid rgba(212, 195, 188, 0.3);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.admin-skel-row {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid rgba(212, 195, 188, 0.18);
+
+  &:last-child { border-bottom: none; }
+  &:nth-child(odd) { background: rgba(255, 255, 255, 0.5); }
+}
+
+.admin-skel-cell {
+  height: 0.75rem;
+  border-radius: var(--radius);
+  flex-shrink: 0;
+}

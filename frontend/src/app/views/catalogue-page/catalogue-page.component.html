@@ -34,6 +34,7 @@
 
       <app-heritage-product-polaroid-grid
         [products]="filteredItems()"
+        [loading]="!catalog.listHydrated()"
         [loadError]="catalog.loadError()"
         [emptyMessage]="gridEmptyMessage()"
         placeholderText="Price on request in boutique."
@@ -51,7 +52,7 @@
         <p class="archive-cta__hint">
           <a routerLink="/archive">Back to the Archive</a>
           ·
-          <a routerLink="/collection">View collections</a>
+          <a routerLink="/collection">View unique pieces</a>
         </p>
       </div>
       <div class="archive-cta__seal" aria-hidden="true">

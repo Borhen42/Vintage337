@@ -1,6 +1,9 @@
 <div class="cart-root heritage-landing">
   <app-editorial-navbar />
 
+  @if (submitting()) {
+    <div class="v337-loading-bar" role="progressbar" aria-label="Placing order" aria-busy="true"></div>
+  }
   <main class="cart-main film-grain">
     @if (orderAck()) {
       <section class="cart-ack" aria-live="polite">

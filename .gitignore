@@ -23,3 +23,7 @@ backend/uploads/
 .vscode/
 .DS_Store
 Thumbs.db
+
+# Local tooling / runtime artifacts
+.claude/
+*.log

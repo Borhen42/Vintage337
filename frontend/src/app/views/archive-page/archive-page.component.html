@@ -14,6 +14,7 @@
     <section class="archive-gallery" aria-label="Archive pieces">
       <app-heritage-product-polaroid-grid
         [products]="catalog.items()"
+        [loading]="!catalog.listHydrated()"
         [loadError]="catalog.loadError()"
         emptyMessage="No pieces are published yet. When an admin adds products, they appear here as polaroid records."
       />

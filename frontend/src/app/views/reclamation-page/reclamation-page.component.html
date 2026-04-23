@@ -1,46 +1,94 @@
-<div class="reclamation-page">
+<div class="reclamation-page heritage-landing">
   <app-editorial-navbar />
 
-  <main class="reclamation-main heritage-page-shell">
+  <main class="reclamation-main">
     <div class="reclamation-inner">
-      <p class="reclamation-kicker">Contact</p>
-      <h1 class="reclamation-title">Reclamation</h1>
+
+      <!-- Ornament -->
+      <div class="rec-orn" aria-hidden="true">
+        <span class="rec-orn__rule"></span>
+        <svg class="rec-orn__star" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
+        </svg>
+        <span class="rec-orn__rule"></span>
+      </div>
+
+      <p class="reclamation-kicker">Contact the Archive</p>
+      <h1 class="reclamation-title">Reclamation.</h1>
       <p class="reclamation-lead">
-        Describe your issue. We will review it in the admin console and reply by email when we can.
+        Describe your issue and we will review it in the admin console and reply by email.
       </p>
 
       @if (success) {
-        <p class="reclamation-success" role="status">Thank you. Your reclamation was submitted.</p>
-        <a routerLink="/" class="reclamation-back">Back to home</a>
+        <div class="rec-success" role="status">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+          </svg>
+          <span>Your reclamation was submitted. We'll be in touch.</span>
+        </div>
+        <a routerLink="/" class="reclamation-back">← Back to home</a>
       } @else {
-        <form class="reclamation-form" [formGroup]="form" (ngSubmit)="submit()">
-          <label class="reclamation-field">
-            <span>Full name <span class="optional">(optional)</span></span>
-            <input type="text" formControlName="fullName" autocomplete="name" maxlength="120" />
-          </label>
-          <label class="reclamation-field">
-            <span>Email</span>
-            <input type="email" formControlName="email" autocomplete="email" required />
+        <form class="rec-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+
+          <div class="rec-field">
+            <label class="rec-label" for="rec-name">
+              Full name <span class="rec-optional">(optional)</span>
+            </label>
+            <div class="rec-input-wrap">
+              <input id="rec-name" class="rec-input" type="text" formControlName="fullName"
+                     autocomplete="name" maxlength="120" placeholder="Archivist name" />
+              <span class="rec-input-bar" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <div class="rec-field">
+            <label class="rec-label" for="rec-email">Email address</label>
+            <div class="rec-input-wrap">
+              <input id="rec-email" class="rec-input" type="email" formControlName="email"
+                     autocomplete="email" placeholder="name@example.com" />
+              <span class="rec-input-bar" aria-hidden="true"></span>
+            </div>
             @if (form.controls.email.touched && form.controls.email.invalid) {
-              <span class="reclamation-hint">Enter a valid email.</span>
+              <span class="rec-hint" role="alert">Enter a valid email.</span>
             }
-          </label>
-          <label class="reclamation-field">
-            <span>Subject</span>
-            <input type="text" formControlName="subject" maxlength="200" required />
-          </label>
-          <label class="reclamation-field">
-            <span>Message</span>
-            <textarea formControlName="message" rows="6" required></textarea>
-          </label>
+          </div>
+
+          <div class="rec-field">
+            <label class="rec-label" for="rec-subject">Subject</label>
+            <div class="rec-input-wrap">
+              <input id="rec-subject" class="rec-input" type="text" formControlName="subject"
+                     maxlength="200" placeholder="Order issue, damage, return…" />
+              <span class="rec-input-bar" aria-hidden="true"></span>
+            </div>
+          </div>
+
+          <div class="rec-field">
+            <label class="rec-label" for="rec-message">Message</label>
+            <div class="rec-input-wrap rec-input-wrap--area">
+              <textarea id="rec-message" class="rec-input rec-input--area" formControlName="message"
+                        rows="6" placeholder="Describe your issue in detail…"></textarea>
+              <span class="rec-input-bar" aria-hidden="true"></span>
+            </div>
+          </div>
+
           @if (errorMsg) {
-            <p class="reclamation-error" role="alert">{{ errorMsg }}</p>
+            <p class="login-form__error" role="alert">{{ errorMsg }}</p>
           }
-          <button type="submit" class="reclamation-submit" [disabled]="submitting">
-            {{ submitting ? 'Sending...' : 'Submit' }}
+
+          <button type="submit" class="rec-submit" [disabled]="submitting">
+            <span class="rec-submit__bg" aria-hidden="true"></span>
+            <span class="rec-submit__inner">
+              <span>{{ submitting ? 'Sending…' : 'Submit reclamation' }}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+              </svg>
+            </span>
+            <span class="rec-submit__dash" aria-hidden="true"></span>
           </button>
+
         </form>
       }
+
     </div>
   </main>
 </div>

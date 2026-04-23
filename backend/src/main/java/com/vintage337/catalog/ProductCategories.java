@@ -18,7 +18,8 @@ public final class ProductCategories {
                   "T-shirt",
                   "Sweat pants",
                   "Jeans pants",
-                  "Lunette",
+                  "Accessories",
+                  "Chic pants",
                   "Casquette",
                   "Jacket")));
 

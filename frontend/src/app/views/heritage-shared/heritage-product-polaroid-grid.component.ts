@@ -12,6 +12,7 @@ import { UploadSrcPipe } from '../../core/media/upload-src.pipe';
 })
 export class HeritageProductPolaroidGridComponent {
   products = input.required<CatalogProduct[]>();
+  loading  = input(false);
   loadError = input(false);
   errorMessage = input(
     'The archive could not be reached. Start the API (mvn spring-boot:run) and refresh.',

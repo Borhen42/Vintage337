@@ -1,3 +1,18 @@
+<!-- Top loading bar while catalog is fetching -->
+@if (loading()) {
+  <div class="v337-loading-bar" role="progressbar" aria-label="Loading products" aria-busy="true"></div>
+  <div class="archive-skel-grid" aria-hidden="true">
+    @for (_ of [1,2,3,4,5,6,7,8]; track $index) {
+      <div class="archive-skel-card">
+        <div class="archive-skel-card__img skel"></div>
+        <div class="archive-skel-card__line skel"></div>
+        <div class="archive-skel-card__line skel"></div>
+        <div class="archive-skel-card__line skel"></div>
+      </div>
+    }
+  </div>
+}
+
 @if (loadError()) {
   <p class="archive-empty" role="alert">{{ errorMessage() }}</p>
 } @else if (products().length === 0 && emptyMessage()) {

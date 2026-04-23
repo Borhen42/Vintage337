@@ -14,7 +14,23 @@
   </div>
 
   @if (!catalog.listHydrated()) {
-    <p class="heritage-bento__pending reveal-block" role="status">{{ loadingText() }}</p>
+    <div class="v337-loading-bar" role="progressbar" aria-label="Loading products" aria-busy="true"></div>
+    <div class="heritage-bento__skel" aria-hidden="true">
+      <div class="heritage-bento__skel-feature skel"></div>
+      <div class="heritage-bento__skel-side">
+        <div class="heritage-bento__skel-card">
+          <div class="heritage-bento__skel-img skel"></div>
+          <div class="heritage-bento__skel-line skel"></div>
+          <div class="heritage-bento__skel-line heritage-bento__skel-line--short skel"></div>
+          <div class="heritage-bento__skel-sizes">
+            @for (_ of [1,2,3]; track $index) {
+              <div class="heritage-bento__skel-chip skel"></div>
+            }
+          </div>
+        </div>
+        <div class="heritage-bento__skel-club skel"></div>
+      </div>
+    </div>
   } @else if (livePair(); as pair) {
     <div class="heritage-bento__grid">
       <article
