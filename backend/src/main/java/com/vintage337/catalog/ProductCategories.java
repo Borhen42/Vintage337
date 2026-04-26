@@ -21,7 +21,8 @@ public final class ProductCategories {
                   "Accessories",
                   "Chic pants",
                   "Casquette",
-                  "Jacket")));
+                  "Jacket",
+                  "Shorts")));
 
   private ProductCategories() {}
 
